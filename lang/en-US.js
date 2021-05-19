@@ -1,13 +1,12 @@
 export default {
   header: {
     home: 'Home',
-    theme: 'Theme',
-    lang: 'Language',
     login: 'Login',
     profile_page: 'Profile',
     logout: 'Log Out',
     settings: 'Settings',
     myplaylists: 'My Playlists',
+    recently_played: 'Recently Played',
   },
 
   pages: {

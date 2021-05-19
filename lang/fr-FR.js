@@ -6,6 +6,7 @@ export default {
     logout: 'Deconnexion',
     settings: 'Paramètres',
     myplaylists: 'Mes Playlists',
+    recently_played: 'Ecoutés récemment ',
   },
 
   pages: {
@@ -62,6 +63,18 @@ export default {
       preview: 'Extrait du titre',
       no_preview: "Il n'y a pas d'extrait disponible",
       released_on: 'Sorti le ',
+    },
+    recent: {
+      title: 'Ecoutés récemment',
+      average_valence: 'Gaité moyenne :',
+      average_energy: 'Energie moyenne :',
+      average_popularity: 'Popularité moyenne :',
+      danceability: 'Dansable : ',
+      subtitle_analysis:
+        "Statistiques des derniers titres écoutés aujourd'hui (max. 50)",
+      analysis: 'Les dernières musiques écoutées sont ',
+      resultperpage: 'Nombre de titres par page :',
+      listened_on: 'Ecoutée à ',
     },
   },
 

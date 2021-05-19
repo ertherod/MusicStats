@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="getTheme == 'dark' ? 'dark-theme' : 'light-theme'">
     <b-card
       v-for="item in tracks"
       :key="item.track.id"
@@ -37,6 +37,11 @@
                   ><b>{{ artist.name }}</b></b-link
                 >,
               </span>
+            </span>
+            <span v-if="type === 'recent' && item.played_at">
+              <br />
+              {{ $t('pages.recent.listened_on') }}
+              {{ ISOtoHour(item.played_at) }}
             </span>
             <br /><br />
             <u>
@@ -181,6 +186,10 @@ export default {
       type: Array,
       default: null,
     },
+    type: {
+      type: String,
+      default: null,
+    },
   },
   computed: {
     ...mapGetters(['getTheme']),
@@ -217,6 +226,11 @@ export default {
         player.pause()
       }
       this.currentTrack = newTrack
+    },
+    ISOtoHour(date) {
+      date = date.split('T')
+      date = date[1].split(':')
+      return `${date[0]}:${date[1]}`
     },
   },
 }

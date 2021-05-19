@@ -5,10 +5,7 @@
       class="mx-1"
       href="#top"
       :variant="getTheme == 'dark' ? 'outline-light' : 'outline-dark'"
-      @click="
-        $emit('change', currentPage - 1)
-        updateData()
-      "
+      @click="$emit('change', currentPage - 1)"
       >{{ '&lt;' }}</b-button
     >
     <b-button
@@ -18,10 +15,7 @@
       class="mx-1"
       :variant="`${getTheme == 'dark' ? 'outline-light' : 'outline-dark'}
         ${currentPage == page ? 'active' : ''}`"
-      @click="
-        $emit('goto', page)
-        updateData()
-      "
+      @click="$emit('change', page)"
       >{{ page }}</b-button
     >
     <b-button
@@ -29,10 +23,7 @@
       class="mx-1"
       href="#top"
       :variant="getTheme == 'dark' ? 'outline-light' : 'outline-dark'"
-      @click="
-        $emit('change', currentPage + 1)
-        updateData()
-      "
+      @click="$emit('change', currentPage + 1)"
       >{{ '&gt;' }}</b-button
     >
   </b-btn-group>
@@ -57,6 +48,9 @@ export default {
   },
   watch: {
     pageNumber() {
+      this.updateData()
+    },
+    currentPage() {
       this.updateData()
     },
   },

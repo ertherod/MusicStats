@@ -30,6 +30,14 @@
           {{ $t('header.myplaylists') }}
         </b-nav-item>
         <b-nav-item
+          v-if="isConnected"
+          :to="localePath('/recently-played')"
+          :active="$route.path == localePath('/recently-played')"
+        >
+          <fa-icon :icon="['far', 'clock']" />
+          {{ $t('header.recently_played') }}
+        </b-nav-item>
+        <b-nav-item
           v-if="!isConnected"
           :to="localePath('/settings')"
           :active="$route.path == localePath('/settings')"

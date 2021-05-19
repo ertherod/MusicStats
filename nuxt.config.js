@@ -68,6 +68,7 @@ export default {
             'faChevronDown',
           ],
           brands: ['faTwitter', 'faInstagram', 'faGithub', 'faSpotify'],
+          regular: ['faClock', 'faAngry', 'faFrown', 'faSmileBeam', 'faSmile'],
         },
       },
     ],
