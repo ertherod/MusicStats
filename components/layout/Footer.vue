@@ -1,6 +1,6 @@
 <template>
   <footer
-    :class="`text-lg-start ${getTheme == 'dark' ? 'bg-dark' : 'bg-light'}`"
+    :class="`text-lg-start ${getTheme === 'dark' ? 'bg-dark' : 'bg-light'}`"
   >
     <div class="p-2 container-md">
       <div class="row">

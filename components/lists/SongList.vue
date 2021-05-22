@@ -44,7 +44,7 @@
               {{ ISOtoHour(item.played_at) }}
             </span>
             <br /><br />
-            <u>
+            <u v-if="item.audio_features">
               {{ $t('pages.myplaylists.analysis_song') }}
               {{
                 $t(
@@ -88,7 +88,7 @@
                     />
                   </b-col>
                   <b-col cols="12" md="8">
-                    <h6>
+                    <h6 v-if="type !== 'album'">
                       <span v-if="item.track.album.album_type === 'single'">{{
                         $t('pages.myplaylists.in_single')
                       }}</span>
@@ -102,53 +102,39 @@
                     </h6>
                     <h6>
                       {{ $t('pages.myplaylists.released_on') }}
-                      {{ getDateFromISO(item.track.album.release_date, 'd') }}
-                      {{
-                        $t(
-                          `date.month.${getDateFromISO(
-                            item.track.album.release_date,
-                            'm'
-                          )}`
-                        )
-                      }}
+                      <span
+                        v-if="
+                          getDateFromISO(item.track.album.release_date, 'd')
+                        "
+                        >{{
+                          getDateFromISO(item.track.album.release_date, 'd')
+                        }}</span
+                      >
+                      <span
+                        v-if="
+                          getDateFromISO(item.track.album.release_date, 'm')
+                        "
+                        >{{
+                          $t(
+                            `date.month.${getDateFromISO(
+                              item.track.album.release_date,
+                              'm'
+                            )}`
+                          )
+                        }}</span
+                      >
+
                       {{ getDateFromISO(item.track.album.release_date, 'y') }}
                     </h6>
-                    <h6>{{ $t('pages.myplaylists.valence') }}</h6>
-                    <b-progress :max="1" variant="warning" class="my-2">
-                      <b-progress-bar
-                        :value="item.audio_features.valence"
-                        :label="`${(item.audio_features.valence * 100).toFixed(
-                          0
-                        )}%`"
-                      ></b-progress-bar>
-                    </b-progress>
-                    <h6>{{ $t('pages.myplaylists.energy') }}</h6>
-                    <b-progress :max="1" variant="danger" class="my-2">
-                      <b-progress-bar
-                        :value="item.audio_features.energy"
-                        :label="`${(item.audio_features.energy * 100).toFixed(
-                          0
-                        )}%`"
-                      ></b-progress-bar>
-                    </b-progress>
-                    <h6>{{ $t('pages.myplaylists.danceability') }}</h6>
-                    <b-progress :max="1" variant="primary" class="my-2">
-                      <b-progress-bar
-                        :value="item.audio_features.danceability"
-                        :label="`${(
-                          item.audio_features.danceability * 100
-                        ).toFixed(0)}%`"
-                      ></b-progress-bar>
-                    </b-progress>
-                    <h6>
-                      {{ $t('pages.myplaylists.popularity') }}
-                    </h6>
-                    <b-progress :max="100" variant="success" class="my-2">
-                      <b-progress-bar
-                        :value="item.track.popularity"
-                        :label="`${item.track.popularity}%`"
-                      ></b-progress-bar>
-                    </b-progress>
+
+                    <ProgressAnalysis
+                      v-if="item.audio_features"
+                      :analysis="{
+                        ...item.audio_features,
+                        popularity: item.track.popularity,
+                      }"
+                    />
+
                     <br />
                     <div v-if="item.track.preview_url">
                       <h6>{{ $t('pages.myplaylists.preview') }}</h6>
@@ -164,6 +150,33 @@
                     <div v-else>
                       <h6>{{ $t('pages.myplaylists.no_preview') }}</h6>
                     </div>
+                    <b-button-group
+                      v-if="getUserData.product === 'premium'"
+                      class="mt-2"
+                      style="width: 100%"
+                    >
+                      <b-button
+                        :variant="`${
+                          getTheme == 'dark' ? 'outline-light' : 'outline-dark'
+                        }`"
+                        @click="addToQueue(item.track.uri)"
+                      >
+                        <fa-icon :icon="['fas', 'step-forward']" />
+                        {{ $t('songlist.nextQueue') }}
+                      </b-button>
+                      <b-button
+                        :variant="`${
+                          getTheme == 'dark' ? 'outline-light' : 'outline-dark'
+                        }`"
+                        @click="playNextAndSkip(item.track.uri)"
+                      >
+                        <fa-icon :icon="['fas', 'fast-forward']" />
+                        {{ $t('songlist.nextQueueAndNext') }}
+                      </b-button>
+                    </b-button-group>
+                    <h6 v-if="getStatus === 404">
+                      {{ $t('songlist.noplayer') }}
+                    </h6>
                   </b-col>
                 </b-row>
               </b-card>
@@ -176,7 +189,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import { getAnalysis } from '~/utils'
 
 export default {
@@ -191,19 +204,29 @@ export default {
       default: null,
     },
   },
+  data() {
+    return {
+      timezone: parseInt(Math.round(new Date().getTimezoneOffset() / -60)),
+    }
+  },
   computed: {
     ...mapGetters(['getTheme']),
+    ...mapGetters('userprofile', ['getUserData']),
+    ...mapGetters('player', ['getStatus']),
   },
   methods: {
+    ...mapActions('player', ['addToQueue', 'skipTrack']),
     requestAnalysis: getAnalysis,
     getDateFromISO(date, type) {
       date = date.split('-')
       if (type === 'y') {
         return date[0]
-      } else if (type === 'm') {
+      } else if (type === 'm' && date[1]) {
         return Math.round(date[1])
-      } else {
+      } else if (date[2]) {
         return Math.round(date[2])
+      } else {
+        return null
       }
     },
     closeOtherCollapses(newCollapse) {
@@ -230,7 +253,11 @@ export default {
     ISOtoHour(date) {
       date = date.split('T')
       date = date[1].split(':')
-      return `${date[0]}:${date[1]}`
+      return `${parseInt(date[0]) + this.timezone}:${date[1]}`
+    },
+    async playNextAndSkip(item) {
+      await this.addToQueue(item)
+      this.skipTrack()
     },
   },
 }

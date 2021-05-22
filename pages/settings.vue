@@ -20,7 +20,6 @@
           ${$i18n.locale == 'en' ? 'active' : ''}`"
               @click="$i18n.setLocale('en')"
             >
-              <country-flag country="us" size="normal" class="flag" />
               English
             </b-button>
             <b-button
@@ -30,7 +29,6 @@
         ${$i18n.locale == 'fr' ? 'active' : ''}`"
               @click="$i18n.setLocale('fr')"
             >
-              <country-flag country="fr" size="normal" class="flag" />
               Français
             </b-button>
           </b-button-group>

@@ -37,6 +37,7 @@ export const actions = {
       })
 
       commit('updateRecentlyPlayedList', data.body.items)
+      dispatch('requestAverageFeatures')
     } catch (err) {
       if (
         err.statusCode === 401 &&
@@ -46,6 +47,7 @@ export const actions = {
           root: true,
         })
         dispatch('requestRecentlyPlayed')
+        dispatch('requestAverageFeatures')
       }
     }
   },
@@ -61,12 +63,14 @@ export const actions = {
     }
     let total = 0
     let popularity = 0
-    state.list.forEach((item) => {
-      Object.keys(average).forEach((key) => {
-        average[key] += item.audio_features[key]
-      })
-      popularity += item.track.popularity
-      total += 1
+    state.list.forEach((item, index) => {
+      if (index < 15) {
+        Object.keys(average).forEach((key) => {
+          average[key] += item.audio_features[key]
+        })
+        popularity += item.track.popularity
+        total += 1
+      }
     })
     average.popularity = popularity
     Object.keys(average).forEach((key) => {

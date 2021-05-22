@@ -125,110 +125,47 @@
 
       <br />
 
-      <div id="top"></div>
-
-      <h6>
-        {{ $t('pages.myplaylists.resultperpage') }}
-        <filter-select
-          :filter-list="[5, 10, 15, 20, 25]"
-          :default-filter="filter"
-          @change="changeFilter"
-        ></filter-select>
-      </h6>
-
-      <br />
-      <div class="row justify-content-center">
-        <page-buttons
-          :current-page="currentPage"
-          :page-number="pageNumber"
-          @change="buttonChange"
-        />
-      </div>
-
-      <div v-if="getCurrentPlaylist">
-        <song-list :tracks="filterTracks"></song-list>
-      </div>
-
-      <br />
-      <div class="row justify-content-center">
-        <page-buttons
-          :current-page="currentPage"
-          :page-number="pageNumber"
-          @change="buttonChange"
-        />
-      </div>
+      <ListButtonFilter
+        type="playlist_tracks"
+        :filters="{ list: [5, 10, 15, 20, 25], filter: 10 }"
+        :objectlist="getCurrentPlaylist.tracks.items"
+        :texts="{ resultperpage: 'pages.recent.resultperpage' }"
+      />
     </div>
     <div v-else class="text-center pt-2">
-      <b-spinner
-        class="spinner"
-        :variant="getTheme == 'dark' ? 'light' : 'primary'"
-      />
-      <h2>{{ $t('pages.myplaylists.getting') }}</h2>
+      <Loading />
     </div>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import FilterSelect from '~/components/filters/FilterSelect.vue'
-import PageButtons from '~/components/filters/PageButtons.vue'
-import SongList from '~/components/SongList.vue'
+
+import ListButtonFilter from '~/components/ListButtonFilter.vue'
+
 import { getAnalysis } from '~/utils'
 
 export default {
   name: 'PlaylistPage',
-  components: { PageButtons, FilterSelect, SongList },
-  data() {
-    return {
-      currentTrack: null,
-      currentCollapse: null,
-      firstItem: 0,
-      lastItem: 10,
-      filter: 10,
-      currentPage: 1,
-      pageList: null,
-    }
-  },
+  components: { ListButtonFilter },
   computed: {
     ...mapGetters('playlists', ['getCurrentPlaylist', 'getCurrentAverageData']),
     ...mapGetters(['getTheme']),
-    filterTracks() {
-      return this.getCurrentPlaylist.tracks.items.slice(
-        this.firstItem,
-        this.lastItem
-      )
+  },
+  watch: {
+    getCurrentPlaylist() {
+      this.computeAverageAudioFeatures()
     },
   },
   async mounted() {
     await this.requestPlaylistItems(this.$route.params.id)
-    this.computeAverageAudioFeatures()
-    this.updateData()
   },
   methods: {
     ...mapActions('playlists', [
       'requestPlaylistItems',
       'computeAverageAudioFeatures',
     ]),
-    requestAnalysis(valence, energy) {
-      return getAnalysis(valence, energy)
-    },
-
-    updateData() {
-      this.firstItem = this.filter * (this.currentPage - 1)
-      this.lastItem = this.filter * this.currentPage
-      this.pageNumber = Math.ceil(
-        this.getCurrentPlaylist.tracks.items.length / this.filter
-      )
-    },
-    buttonChange(page) {
-      this.currentPage = page
-      this.updateData()
-    },
-    changeFilter(filter) {
-      this.filter = filter
-      this.currentPage = 1
-      this.updateData()
-    },
+    requestAnalysis: getAnalysis,
   },
 }
 </script>
@@ -241,10 +178,5 @@ export default {
 .track {
   border-radius: 2vh;
   overflow: hidden;
-}
-
-.spinner {
-  height: 8vh;
-  width: 8vh;
 }
 </style>

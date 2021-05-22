@@ -75,7 +75,18 @@ export default {
       analysis: 'Les dernières musiques écoutées sont ',
       resultperpage: 'Nombre de titres par page :',
       listened_on: 'Ecoutée à ',
+      refresh: 'Actualiser',
     },
+    album: {
+      analysis: 'Cet album est',
+    },
+  },
+
+  songlist: {
+    nextQueue: 'Ajouter à la queue de lecture',
+    nextQueueAndNext: 'Ajouter à la queue de lecture et passer le titre',
+    noplayer:
+      "Vous devez avoir Spotify en cours d'écoute pour ajouter à la suite !",
   },
 
   error: {
@@ -105,6 +116,10 @@ export default {
     sad: 'triste',
     chill: 'calme',
     agressive: 'agressive',
+    valence: 'Gaité :',
+    energy: 'Energie :',
+    popularity: 'Popularité :',
+    danceability: 'Dansable : ',
   },
 
   date: {

@@ -11,14 +11,8 @@
     "lint": "npm run lint:js"
   },
   "dependencies": {
-    "@fortawesome/free-brands-svg-icons": "^5.15.3",
-    "@fortawesome/free-regular-svg-icons": "^5.15.3",
-    "@fortawesome/free-solid-svg-icons": "^5.15.3",
-    "@fortawesome/vue-fontawesome": "^2.0.2",
     "@nuxtjs/dotenv": "^1.4.1",
-    "@nuxtjs/fontawesome": "^1.1.2",
     "axios": "^0.21.1",
-    "bootstrap": "^4.6.0",
     "bootstrap-vue": "^2.21.2",
     "cookie": "^0.3.1",
     "core-js": "^3.9.1",
@@ -29,19 +23,26 @@
     "pkce-challenge": "^2.1.0",
     "querystring": "^0.2.0",
     "spotify-web-api-node": "^5.0.2",
-    "vue-country-flag": "^2.1.1",
     "vuex-persistedstate": "*"
   },
   "devDependencies": {
+    "@fortawesome/free-brands-svg-icons": "^5.15.3",
+    "@fortawesome/free-regular-svg-icons": "^5.15.3",
+    "@fortawesome/free-solid-svg-icons": "^5.15.3",
+    "@fortawesome/vue-fontawesome": "^2.0.2",
     "@nuxtjs/eslint-config": "^6.0.0",
     "@nuxtjs/eslint-module": "^3.0.2",
+    "@nuxtjs/fontawesome": "^1.1.2",
     "@nuxtjs/pwa": "^3.3.5",
     "babel-eslint": "^10.1.0",
+    "bootstrap": "^4.6.0",
     "eslint": "^7.22.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-nuxt": "^2.0.0",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-vue": "^7.7.0",
-    "prettier": "^2.2.1"
+    "nuxt-vite": "^0.1.0",
+    "prettier": "^2.2.1",
+    "secure-ls": "^1.2.6"
   }
 }

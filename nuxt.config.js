@@ -33,10 +33,7 @@ export default {
   },
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [
-    { src: './plugins/persistedState.js' },
-    { src: './plugins/vue-country-flag.js' },
-  ],
+  plugins: [{ src: './plugins/persistedState.js', ssr: false }],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -66,6 +63,9 @@ export default {
             'faLock',
             'faChevronUp',
             'faChevronDown',
+            'faSync',
+            'faStepForward',
+            'faFastForward',
           ],
           brands: ['faTwitter', 'faInstagram', 'faGithub', 'faSpotify'],
           regular: ['faClock', 'faAngry', 'faFrown', 'faSmileBeam', 'faSmile'],
@@ -74,6 +74,7 @@ export default {
     ],
     '@nuxtjs/dotenv',
     '@nuxtjs/pwa',
+    'bootstrap-vue/nuxt',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -113,13 +114,36 @@ export default {
     ],
   ],
 
+  bootstrapVue: {
+    icons: false,
+    componentPlugins: [
+      'Layout',
+      'Nav',
+      'Navbar',
+      'Card',
+      'Button',
+      'ButtonGroup',
+      'FormSelect',
+      'Collapse',
+      'Progress',
+      'Link',
+      'Spinner',
+    ],
+  },
+
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    analyze: true,
     extractCSS: true,
     extend(config, { isClient }) {
       if (isClient) {
-        config.optimization.splitChunks.maxSize = 200000
+        config.optimization.splitChunks.maxSize = 300000
+        config.optimization.splitChunks.minSize = 10000
+        config.optimization.runtimeChunk = true
       }
+    },
+    babel: {
+      compact: true,
     },
   },
 

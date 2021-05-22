@@ -1,7 +1,8 @@
 export const state = () => ({
-  theme: 'light',
+  theme: 'dark',
   token: null,
   connected: false,
+  country: null,
 })
 
 export const getters = {
@@ -15,20 +16,18 @@ export const getters = {
 export const actions = {
   tryConnect({ commit, dispatch, state }) {
     if (state.token.expire < Date.now()) {
-      // dispatch('auth/refreshToken', state.token.refresh)
+      dispatch('auth/refreshToken', state.token.refresh)
     } else {
       dispatch('userprofile/requestUserProfile')
       commit('setConnected')
     }
   },
 
-  setTheme({ commit, state }, theme) {
+  setTheme({ commit }, theme) {
     if (theme !== 'light' && theme !== 'dark') {
       theme = 'dark'
     }
-    if (state.theme !== theme) {
-      commit('changeTheme', theme)
-    }
+    commit('changeTheme', theme)
   },
 
   disconnect({ commit }) {
@@ -61,5 +60,9 @@ export const mutations = {
 
   setConnected(state) {
     state.connected = true
+  },
+
+  setCountry(state, country) {
+    state.country = country
   },
 }

@@ -51,22 +51,24 @@ export const actions = {
     try {
       SpotifyApi.setAccessToken(rootState.token.access)
       let offset = 0
+
       const finaldata = await SpotifyApi.getPlaylist(id, {
         fields:
           'collaborative,description,followers,id,images,name,owner,public,type',
       })
       let data = await SpotifyApi.getPlaylistTracks(id, {
         fields:
-          'next,total,items(added_at,added_by,track(artists,album(!available_markets),is_local,duration,explicit,name,popularity,preview_url,id))',
+          'next,total,items(added_at,added_by,track(artists,album(!available_markets),is_local,duration,explicit,name,popularity,preview_url,id,uri,type))',
       })
       let idlist = []
       data.body.items.forEach((item) => {
-        if (!item.is_local) {
-          idlist.push(item.track.id)
-        } else {
+        if (item.is_local || !item.track || item.track.type === 'episode') {
           data.body.items.splice(data.body.items.indexOf(item), 1)
+        } else {
+          idlist.push(item.track.id)
         }
       })
+
       let features = await SpotifyApi.getAudioFeaturesForTracks(idlist)
       data.body.items.forEach((item) => {
         data.body.items[data.body.items.indexOf(item)] = {
@@ -75,17 +77,18 @@ export const actions = {
             features.body.audio_features[data.body.items.indexOf(item)],
         }
       })
+
       finaldata.body.tracks = data.body
       while (data.body.next) {
         offset += 100
         data = await SpotifyApi.getPlaylistTracks(id, {
           offset,
           fields:
-            'next,items(added_at,added_by,track(artists,album(!available_markets),is_local,duration,explicit,name,popularity,preview_url,id))',
+            'next,items(added_at,added_by,track(artists,album(!available_markets),is_local,duration,explicit,name,popularity,preview_url,id,uri,type))',
         })
         idlist = []
         data.body.items.forEach((item) => {
-          if (!item.is_local) {
+          if (!item.is_local || item.track.type === 'episode') {
             idlist.push(item.track.id)
           } else {
             data.body.items.splice(data.body.items.indexOf(item), 1)
@@ -104,7 +107,6 @@ export const actions = {
           ...data.body.items,
         ]
       }
-
       commit('addPlaylistContent', finaldata.body)
     } catch (err) {
       if (
@@ -130,11 +132,13 @@ export const actions = {
     let total = 0
     let popularity = 0
     state.currentPlaylist.tracks.items.forEach((item) => {
-      Object.keys(average).forEach((key) => {
-        average[key] += item.audio_features[key]
-      })
-      popularity += item.track.popularity
-      total += 1
+      if (item.audio_features) {
+        Object.keys(average).forEach((key) => {
+          average[key] += item.audio_features[key]
+        })
+        popularity += item.track.popularity
+        total += 1
+      }
     })
     average.popularity = popularity
     Object.keys(average).forEach((key) => {

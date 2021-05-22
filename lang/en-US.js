@@ -63,6 +63,28 @@ export default {
       no_preview: 'No song preview available',
       released_on: 'Released on ',
     },
+    recent: {
+      title: 'Recently listened',
+      average_valence: 'Average happiness :',
+      average_energy: 'Average energy :',
+      average_popularity: 'Average popularity :',
+      danceability: 'Danceability : ',
+      subtitle_analysis: 'Stats about recent listened tracks today (max.50)',
+      analysis: 'The recent played tracks are ',
+      resultperpage: 'Number of tracks per page',
+      listened_on: 'Listened at ',
+      refresh: 'Refresh',
+    },
+    album: {
+      analysis: 'This album is ',
+      total_duration: 'Durée :',
+    },
+  },
+
+  songlist: {
+    nextQueue: 'Add to queue',
+    nextQueueAndNext: 'Add to queue and skip to next song',
+    noplayer: 'You need to have Spotify opened and playing to add to queue',
   },
 
   error: {

@@ -1,20 +1,21 @@
 import SpotifyWebApi from 'spotify-web-api-node'
 
-export const state = () => ({
+const state = () => ({
   userData: undefined,
 })
 
-export const getters = {
+const getters = {
   getUserData: (state) => state.userData,
 }
 
-export const actions = {
+const actions = {
   async requestUserProfile({ rootState, commit, dispatch }) {
     const SpotifyApi = new SpotifyWebApi()
     try {
       SpotifyApi.setAccessToken(rootState.token.access)
       const userData = await SpotifyApi.getMe()
       commit('updateUserData', userData)
+      commit('setCountry', userData.body.country, { root: true })
     } catch (err) {
       if (
         err.statusCode === 401 &&
@@ -29,8 +30,10 @@ export const actions = {
   },
 }
 
-export const mutations = {
+const mutations = {
   updateUserData(state, userData) {
     state.userData = userData.body
   },
 }
+
+export { state, getters, actions, mutations }
