@@ -2,7 +2,7 @@
   <div v-if="objectlist" class="list">
     <div id="top"></div>
 
-    <h6>
+    <h6 v-if="objectlist.length > 5">
       {{ $t(texts.resultperpage) }}
       <FilterSelect
         :filter-list="filters.list"

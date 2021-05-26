@@ -54,7 +54,7 @@ export const actions = {
 
       const finaldata = await SpotifyApi.getPlaylist(id, {
         fields:
-          'collaborative,description,followers,id,images,name,owner,public,type',
+          'collaborative,description,followers,id,images,name,owner,public,type;uri',
       })
       let data = await SpotifyApi.getPlaylistTracks(id, {
         fields:

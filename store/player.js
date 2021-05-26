@@ -2,10 +2,12 @@ import SpotifyWebApi from 'spotify-web-api-node'
 
 export const state = () => ({
   status: null,
+  track: null,
 })
 
 export const getters = {
   getStatus: (state) => state.status,
+  getTrack: (state) => state.track,
 }
 
 export const actions = {
@@ -14,7 +16,7 @@ export const actions = {
     try {
       SpotifyApi.setAccessToken(rootState.token.access)
       const response = await SpotifyApi.addToQueue(uri)
-      commit('setStatus', response.status)
+      commit('setStatus', response.statusCode)
     } catch (err) {
       if (
         err.statusCode === 401 &&
@@ -29,11 +31,12 @@ export const actions = {
     }
   },
 
-  async skipTrack({ rootState, dispatch }) {
+  async skipTrack({ rootState, dispatch, commit }) {
     const SpotifyApi = new SpotifyWebApi()
     try {
       SpotifyApi.setAccessToken(rootState.token.access)
-      await SpotifyApi.skipToNext()
+      const response = await SpotifyApi.skipToNext()
+      commit('setStatus', response.statusCode)
     } catch (err) {
       if (
         err.statusCode === 401 &&
@@ -46,10 +49,113 @@ export const actions = {
       }
     }
   },
+
+  async requestTrack({ rootState, dispatch, commit }) {
+    const SpotifyApi = new SpotifyWebApi()
+    try {
+      SpotifyApi.setAccessToken(rootState.token.access)
+      const track = await SpotifyApi.getMyCurrentPlayingTrack()
+      if (track.statusCode === 204) {
+        commit('updateCurrentTrack', 204)
+      } else {
+        commit('updateCurrentTrack', track.body)
+      }
+    } catch (err) {
+      if (
+        err.statusCode === 401 &&
+        err.body.error.message === 'The access token expired'
+      ) {
+        await dispatch('auth/refreshToken', rootState.token.refresh, {
+          root: true,
+        })
+        dispatch('skipTrack')
+      }
+    }
+  },
+
+  async requestState({ rootState, dispatch, commit }) {
+    const SpotifyApi = new SpotifyWebApi()
+    try {
+      SpotifyApi.setAccessToken(rootState.token.access)
+      const track = await SpotifyApi.getMyCurrentPlaybackState()
+      commit('updateCurrentTrack', track.body)
+    } catch (err) {
+      if (
+        err.statusCode === 401 &&
+        err.body.error.message === 'The access token expired'
+      ) {
+        await dispatch('auth/refreshToken', rootState.token.refresh, {
+          root: true,
+        })
+        dispatch('skipTrack')
+      }
+    }
+  },
+
+  async playTrack({ rootState, dispatch }, uri) {
+    const SpotifyApi = new SpotifyWebApi()
+    try {
+      SpotifyApi.setAccessToken(rootState.token.access)
+      await SpotifyApi.play({ uris: [uri] })
+    } catch (err) {
+      if (
+        err.statusCode === 401 &&
+        err.body.error.message === 'The access token expired'
+      ) {
+        await dispatch('auth/refreshToken', rootState.token.refresh, {
+          root: true,
+        })
+        dispatch('playTrack', uri)
+      }
+    }
+  },
+
+  async playContext({ rootState, dispatch }, uri, shuffle = null) {
+    const SpotifyApi = new SpotifyWebApi()
+    try {
+      SpotifyApi.setAccessToken(rootState.token.access)
+      await dispatch('setShuffle', !!shuffle)
+      await SpotifyApi.play({ context_uri: uri })
+    } catch (err) {
+      if (
+        err.statusCode === 401 &&
+        err.body.error.message === 'The access token expired'
+      ) {
+        await dispatch('auth/refreshToken', rootState.token.refresh, {
+          root: true,
+        })
+        dispatch('playContext', uri, shuffle)
+      }
+    }
+  },
+
+  async setShuffle({ rootState, commit, dispatch }, shuffle = false) {
+    const SpotifyApi = new SpotifyWebApi()
+    try {
+      SpotifyApi.setAccessToken(rootState.token.access)
+      console.log(`${shuffle}`)
+      const response = await SpotifyApi.setShuffle(shuffle)
+      console.log(response.statusCode)
+    } catch (err) {
+      if (
+        err.statusCode === 401 &&
+        err.body.error.message === 'The access token expired'
+      ) {
+        await dispatch('auth/refreshToken', rootState.token.refresh, {
+          root: true,
+        })
+        dispatch('setShuffle', shuffle)
+      }
+    }
+  },
 }
 
 export const mutations = {
   setStatus(state, status) {
     state.status = status
+  },
+
+  updateCurrentTrack(state, track) {
+    state.track = track
   },
 }

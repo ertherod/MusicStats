@@ -59,6 +59,7 @@ export default {
       followers: 'followers',
       in_single: 'In single',
       in_album: 'In album',
+      in_ep: 'In EP',
       preview: 'Song preview :',
       no_preview: 'No song preview available',
       released_on: 'Released on ',
@@ -76,14 +77,21 @@ export default {
       refresh: 'Refresh',
     },
     album: {
-      analysis: 'This album is ',
-      total_duration: 'Durée :',
+      analysis_album: 'This album is ',
+      analysis_single: 'This single is',
+      analysis_ep: 'This EP is',
+      total_duration: 'Duration :',
+      album: 'Album',
+      ep: 'EP',
+      single: 'Single',
+      by: 'par',
     },
   },
 
   songlist: {
     nextQueue: 'Add to queue',
-    nextQueueAndNext: 'Add to queue and skip to next song',
+    listen: 'Listen',
+    listenshuffle: 'Shuffle listen',
     noplayer: 'You need to have Spotify opened and playing to add to queue',
   },
 

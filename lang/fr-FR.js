@@ -60,6 +60,7 @@ export default {
       followers: 'personnes suivent',
       in_single: 'Dans le single',
       in_album: "Dans l'album",
+      in_ep: "Dans l'EP",
       preview: 'Extrait du titre',
       no_preview: "Il n'y a pas d'extrait disponible",
       released_on: 'Sorti le ',
@@ -79,14 +80,26 @@ export default {
     },
     album: {
       analysis: 'Cet album est',
+      analysis_single: 'Ce single est',
+      analysis_ep: 'Cet EP est',
+      total_duration: 'Durée :',
+      album: 'Album',
+      ep: 'EP',
+      single: 'Single',
+      by: 'par',
+      happy: 'joyeux',
+      sad: 'triste',
+      chill: 'calme',
+      agressive: 'agressif',
     },
   },
 
   songlist: {
-    nextQueue: 'Ajouter à la queue de lecture',
-    nextQueueAndNext: 'Ajouter à la queue de lecture et passer le titre',
+    nextQueue: 'Prochaine écoute',
+    listen: 'Écouter',
     noplayer:
       "Vous devez avoir Spotify en cours d'écoute pour ajouter à la suite !",
+    listenshuffle: 'Écouter en aléatoire',
   },
 
   error: {

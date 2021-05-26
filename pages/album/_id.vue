@@ -9,7 +9,12 @@
     >
       <b-card :bg-variant="getTheme == 'dark' ? 'dark' : 'light'" class="track">
         <template #header>
-          <span class="h2">{{ getAlbum.name }}</span>
+          <b-row align-h="center">
+            <span class="h3">
+              <fa-icon :icon="['fas', 'record-vinyl']" />
+              {{ getAlbum.name }}</span
+            >
+          </b-row>
         </template>
         <b-row>
           <div class="col-md-4 mb-3">
@@ -21,7 +26,18 @@
           </div>
           <div class="col-md-8 px-5 mb-3">
             <h4>
-              {{ $t('pages.myplaylists.by') }}
+              <span
+                v-if="
+                  getAlbum.album_type === 'single' &&
+                  getAlbum.tracks.items.length === 1
+                "
+                >{{ $t('pages.album.single') }}</span
+              >
+              <span v-else-if="getAlbum.album_type === 'single'">{{
+                $t('pages.album.ep')
+              }}</span>
+              <span v-else>{{ $t('pages.album.album') }}</span>
+              {{ $t('pages.album.by') }}
               <span
                 v-for="(artist, index) in getAlbum.artists"
                 :key="artist.id"
@@ -71,7 +87,7 @@
                   {{ $t('pages.album.analysis') }}
                   {{
                     $t(
-                      `analysis.${requestAnalysis(
+                      `pages.album.${requestAnalysis(
                         getAverageFeatures.valence,
                         getAverageFeatures.energy
                       )}`

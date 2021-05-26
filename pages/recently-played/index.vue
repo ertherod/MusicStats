@@ -3,18 +3,10 @@
     <div v-if="ready">
       <b-card :bg-variant="getTheme == 'dark' ? 'dark' : 'light'" class="track">
         <template #header>
-          <b-row align-h="between" class="mx-2">
-            <span class="h2"
+          <b-row align-h="center" class="mx-2">
+            <span class="h3"
               ><fa-icon :icon="['far', 'clock']" />
               {{ $t('pages.recent.title') }}</span
-            >
-            <b-button
-              :variant="`${
-                getTheme == 'dark' ? 'outline-light' : 'outline-dark'
-              }`"
-              @click="requestRecentlyPlayed()"
-              ><fa-icon :icon="['fas', 'sync']" />
-              {{ $t('pages.recent.refresh') }}</b-button
             >
           </b-row>
         </template>
@@ -41,6 +33,18 @@
             <ProgressAnalysis :analysis="getAverageFeatures" />
           </b-col>
         </b-row>
+        <template #footer>
+          <b-row align-h="center" class="mx-1">
+            <b-button
+              :variant="`${
+                getTheme == 'dark' ? 'outline-light' : 'outline-dark'
+              }`"
+              @click="requestRecentlyPlayed()"
+              ><fa-icon :icon="['fas', 'sync']" />
+              {{ $t('pages.recent.refresh') }}</b-button
+            >
+          </b-row>
+        </template>
       </b-card>
       <div id="top"></div>
       <br />

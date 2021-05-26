@@ -38,13 +38,30 @@
                 >,
               </span>
             </span>
+            <h6 v-if="type !== 'album'">
+              <span
+                v-if="
+                  item.track.album.album_type === 'single' &&
+                  item.track.album.total_tracks === 1
+                "
+                >{{ $t('pages.myplaylists.in_single') }}</span
+              >
+              <span v-else-if="item.track.album.album_type === 'single'">{{
+                $t('pages.myplaylists.in_ep')
+              }}</span>
+              <span v-else>{{ $t('pages.myplaylists.in_album') }}</span>
+              <b
+                ><b-link :to="localePath(`/album/${item.track.album.id}`)">{{
+                  item.track.album.name
+                }}</b-link></b
+              >
+            </h6>
             <span v-if="type === 'recent' && item.played_at">
-              <br />
               {{ $t('pages.recent.listened_on') }}
               {{ ISOtoHour(item.played_at) }}
             </span>
-            <br /><br />
             <u v-if="item.audio_features">
+              <br />
               {{ $t('pages.myplaylists.analysis_song') }}
               {{
                 $t(
@@ -61,17 +78,44 @@
 
       <template #footer>
         <b-row align-h="center" class="mx-1">
-          <b-button
-            v-b-toggle="`collapse-${item.track.id}`"
-            :variant="getTheme == 'dark' ? 'outline-light' : 'outline-dark'"
-            @click="closeOtherCollapses(item.track.id)"
-          >
-            {{ $t('pages.myplaylists.more') }}
-            <fa-icon :icon="['fas', 'chevron-up']" class="when-open" /><fa-icon
-              :icon="['fas', 'chevron-down']"
-              class="when-closed"
-            />
-          </b-button>
+          <b-button-group class="mt-2">
+            <b-button
+              v-b-toggle="`collapse-${item.track.id}`"
+              :variant="getTheme == 'dark' ? 'outline-light' : 'outline-dark'"
+              @click="closeOtherCollapses(item.track.id)"
+            >
+              {{ $t('pages.myplaylists.more') }}
+              <fa-icon
+                :icon="['fas', 'chevron-up']"
+                class="when-open"
+              /><fa-icon :icon="['fas', 'chevron-down']" class="when-closed" />
+            </b-button>
+
+            <b-button
+              v-if="getUserData.product === 'premium'"
+              :variant="`${
+                getTheme == 'dark' ? 'outline-light' : 'outline-dark'
+              }`"
+              @click="playTrack(item.track.uri)"
+            >
+              <fa-icon :icon="['fas', 'play']" />
+              {{ $t('songlist.listen') }}
+            </b-button>
+
+            <b-button
+              v-if="getUserData.product === 'premium'"
+              :variant="`${
+                getTheme == 'dark' ? 'outline-light' : 'outline-dark'
+              }`"
+              @click="addToQueue(item.track.uri)"
+            >
+              <fa-icon :icon="['fas', 'step-forward']" />
+              {{ $t('songlist.nextQueue') }}
+            </b-button>
+          </b-button-group>
+          <h6 v-if="getStatus === 404">
+            {{ $t('songlist.noplayer') }}
+          </h6>
         </b-row>
         <b-row>
           <b-col cols="12">
@@ -88,18 +132,6 @@
                     />
                   </b-col>
                   <b-col cols="12" md="8">
-                    <h6 v-if="type !== 'album'">
-                      <span v-if="item.track.album.album_type === 'single'">{{
-                        $t('pages.myplaylists.in_single')
-                      }}</span>
-                      <span v-else>{{ $t('pages.myplaylists.in_album') }}</span>
-                      <b
-                        ><b-link
-                          :to="localePath(`/album/${item.track.album.id}`)"
-                          >{{ item.track.album.name }}</b-link
-                        ></b
-                      >
-                    </h6>
                     <h6>
                       {{ $t('pages.myplaylists.released_on') }}
                       <span
@@ -150,33 +182,6 @@
                     <div v-else>
                       <h6>{{ $t('pages.myplaylists.no_preview') }}</h6>
                     </div>
-                    <b-button-group
-                      v-if="getUserData.product === 'premium'"
-                      class="mt-2"
-                      style="width: 100%"
-                    >
-                      <b-button
-                        :variant="`${
-                          getTheme == 'dark' ? 'outline-light' : 'outline-dark'
-                        }`"
-                        @click="addToQueue(item.track.uri)"
-                      >
-                        <fa-icon :icon="['fas', 'step-forward']" />
-                        {{ $t('songlist.nextQueue') }}
-                      </b-button>
-                      <b-button
-                        :variant="`${
-                          getTheme == 'dark' ? 'outline-light' : 'outline-dark'
-                        }`"
-                        @click="playNextAndSkip(item.track.uri)"
-                      >
-                        <fa-icon :icon="['fas', 'fast-forward']" />
-                        {{ $t('songlist.nextQueueAndNext') }}
-                      </b-button>
-                    </b-button-group>
-                    <h6 v-if="getStatus === 404">
-                      {{ $t('songlist.noplayer') }}
-                    </h6>
                   </b-col>
                 </b-row>
               </b-card>
@@ -212,10 +217,11 @@ export default {
   computed: {
     ...mapGetters(['getTheme']),
     ...mapGetters('userprofile', ['getUserData']),
-    ...mapGetters('player', ['getStatus']),
+    ...mapGetters('player', ['getStatus', 'getTrack']),
+    ...mapGetters('recommendations', ['seed_length', 'seed_tracks']),
   },
   methods: {
-    ...mapActions('player', ['addToQueue', 'skipTrack']),
+    ...mapActions('player', ['addToQueue', 'skipTrack', 'playTrack']),
     requestAnalysis: getAnalysis,
     getDateFromISO(date, type) {
       date = date.split('-')
@@ -254,10 +260,6 @@ export default {
       date = date.split('T')
       date = date[1].split(':')
       return `${parseInt(date[0]) + this.timezone}:${date[1]}`
-    },
-    async playNextAndSkip(item) {
-      await this.addToQueue(item)
-      this.skipTrack()
     },
   },
 }

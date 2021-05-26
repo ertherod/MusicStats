@@ -13,7 +13,12 @@
     >
       <b-card :bg-variant="getTheme == 'dark' ? 'dark' : 'light'" class="track">
         <template #header>
-          <span class="h2">{{ getCurrentPlaylist.name }}</span>
+          <b-row align-h="center">
+            <span class="h3">
+              <fa-icon :icon="['fas', 'list']" />
+              {{ getCurrentPlaylist.name }}</span
+            >
+          </b-row>
         </template>
         <b-row>
           <div class="col-md-4 mb-3">
@@ -121,6 +126,39 @@
             </div>
           </div>
         </b-row>
+        <template v-if="getUserData.product === 'premium'" #footer>
+          <b-row align-h="center">
+            <b-button-group class="mt-2">
+              <b-button
+                :variant="`${
+                  getTheme == 'dark' ? 'outline-light' : 'outline-dark'
+                }`"
+                @click="playContext(getCurrentPlaylist.uri, false)"
+              >
+                <fa-icon :icon="['fas', 'play']" />
+                {{ $t('songlist.listen') }}
+              </b-button>
+              <b-button
+                :variant="`${
+                  getTheme == 'dark' ? 'outline-light' : 'outline-dark'
+                }`"
+                @click="playContext(getCurrentPlaylist.uri, true)"
+              >
+                <fa-icon :icon="['fas', 'random']" />
+                {{ $t('songlist.listenshuffle') }}
+              </b-button>
+              <b-button
+                :variant="`${
+                  getTheme == 'dark' ? 'outline-light' : 'outline-dark'
+                }`"
+                @click="requestState()"
+              >
+                <fa-icon :icon="['fas', 'random']" />
+                {{ $t('songlist.listenshuffle') }}
+              </b-button>
+            </b-button-group>
+          </b-row>
+        </template>
       </b-card>
 
       <br />
@@ -151,6 +189,7 @@ export default {
   computed: {
     ...mapGetters('playlists', ['getCurrentPlaylist', 'getCurrentAverageData']),
     ...mapGetters(['getTheme']),
+    ...mapGetters('userprofile', ['getUserData']),
   },
   watch: {
     getCurrentPlaylist() {
@@ -165,6 +204,7 @@ export default {
       'requestPlaylistItems',
       'computeAverageAudioFeatures',
     ]),
+    ...mapActions('player', ['playContext', 'requestState']),
     requestAnalysis: getAnalysis,
   },
 }
