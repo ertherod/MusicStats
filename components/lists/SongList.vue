@@ -23,17 +23,17 @@
             >
               <b-link
                 v-if="index == item.track.artists.length - 1"
-                :to="localePath(`/artists/${artist.id}`)"
+                :to="localePath(`/artist/${artist.id}`)"
                 ><b>{{ artist.name }}</b></b-link
               >
               <span v-else-if="index == item.track.artists.length - 2">
-                <b-link :to="localePath(`/artists/${artist.id}`)"
+                <b-link :to="localePath(`/artist/${artist.id}`)"
                   ><b>{{ artist.name }}</b></b-link
                 >
                 &
               </span>
               <span v-else>
-                <b-link :to="localePath(`/artists/${artist.id}`)"
+                <b-link :to="localePath(`/artist/${artist.id}`)"
                   ><b>{{ artist.name }}</b></b-link
                 >,
               </span>

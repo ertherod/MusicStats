@@ -4,9 +4,7 @@
       getTheme == 'dark' ? 'dark-theme' : 'light-theme'
     }`"
   >
-    <div
-      v-if="getAlbum && getAlbum.id == $route.params.id && getAverageFeatures"
-    >
+    <div v-if="getAlbum && getAlbum.id == $route.params.id">
       <b-card :bg-variant="getTheme == 'dark' ? 'dark' : 'light'" class="track">
         <template #header>
           <b-row align-h="center">
@@ -44,17 +42,17 @@
               >
                 <b-link
                   v-if="index == getAlbum.artists.length - 1"
-                  :to="localePath(`/artists/${artist.id}`)"
+                  :to="localePath(`/artist/${artist.id}`)"
                   ><b>{{ artist.name }}</b></b-link
                 >
                 <span v-else-if="index == getAlbum.artists.length - 2">
-                  <b-link :to="localePath(`/artists/${artist.id}`)"
+                  <b-link :to="localePath(`/artist/${artist.id}`)"
                     ><b>{{ artist.name }}</b></b-link
                   >
                   &
                 </span>
                 <span v-else>
-                  <b-link :to="localePath(`/artists/${artist.id}`)"
+                  <b-link :to="localePath(`/artist/${artist.id}`)"
                     ><b>{{ artist.name }}</b></b-link
                   >,
                 </span>
@@ -96,10 +94,37 @@
                 ></b
               >
               <br /><br />
-              <ProgressAnalysis :analysis="getAverageFeatures" />
+              <ProgressAnalysis
+                v-if="getAverageFeatures"
+                :analysis="getAverageFeatures"
+              />
             </div>
           </div>
         </b-row>
+        <template v-if="getUserData.product === 'premium'" #footer>
+          <b-row align-h="center">
+            <b-button-group class="mt-2">
+              <b-button
+                :variant="`${
+                  getTheme == 'dark' ? 'outline-light' : 'outline-dark'
+                }`"
+                @click="playContext({ uri: getAlbum.uri, shuffle: false })"
+              >
+                <fa-icon :icon="['fas', 'play']" />
+                {{ $t('songlist.listen') }}
+              </b-button>
+              <b-button
+                :variant="`${
+                  getTheme == 'dark' ? 'outline-light' : 'outline-dark'
+                }`"
+                @click="playContext({ uri: getAlbum.uri, shuffle: true })"
+              >
+                <fa-icon :icon="['fas', 'random']" />
+                {{ $t('songlist.listenshuffle') }}
+              </b-button>
+            </b-button-group>
+          </b-row>
+        </template>
       </b-card>
 
       <br />
@@ -130,12 +155,14 @@ export default {
   computed: {
     ...mapGetters('albums', ['getAlbum', 'getAverageFeatures']),
     ...mapGetters(['getTheme']),
+    ...mapGetters('userprofile', ['getUserData']),
   },
   async mounted() {
     await this.requestAlbum(this.$route.params.id)
     await this.requestAverageFeatures()
   },
   methods: {
+    ...mapActions('player', ['playContext']),
     ...mapActions('albums', ['requestAlbum', 'requestAverageFeatures']),
     requestAnalysis: getAnalysis,
   },

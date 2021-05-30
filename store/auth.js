@@ -78,7 +78,7 @@ export const mutations = {
   pkceUpdate(state, { pkce, secret }) {
     state.pkce = pkce
     state.secret = secret
-    state.url = `https://accounts.spotify.com/authorize?response_type=code&code_challenge_method=S256&redirect_uri=http://${process.env.REDIRECT_URI}/auth&client_id=${process.env.CLIENT_ID}&scope=user-read-private user-read-recently-played user-read-currently-playing user-top-read playlist-modify-private user-modify-playback-state playlist-read-private playlist-read-collaborative&code_challenge=${pkce.code_challenge}&state=${secret}`
+    state.url = `https://accounts.spotify.com/authorize?response_type=code&code_challenge_method=S256&redirect_uri=http://${process.env.REDIRECT_URI}/auth&client_id=${process.env.CLIENT_ID}&scope=user-read-private user-read-recently-played user-read-currently-playing user-top-read user-read-playback-position playlist-modify-private user-read-playback-state user-modify-playback-state playlist-read-private playlist-read-collaborative&code_challenge=${pkce.code_challenge}&state=${secret}`
   },
   clearPKCE(state) {
     state.pkce = undefined

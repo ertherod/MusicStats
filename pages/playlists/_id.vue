@@ -133,7 +133,9 @@
                 :variant="`${
                   getTheme == 'dark' ? 'outline-light' : 'outline-dark'
                 }`"
-                @click="playContext(getCurrentPlaylist.uri, false)"
+                @click="
+                  playContext({ uri: getCurrentPlaylist.uri, shuffle: false })
+                "
               >
                 <fa-icon :icon="['fas', 'play']" />
                 {{ $t('songlist.listen') }}
@@ -142,16 +144,9 @@
                 :variant="`${
                   getTheme == 'dark' ? 'outline-light' : 'outline-dark'
                 }`"
-                @click="playContext(getCurrentPlaylist.uri, true)"
-              >
-                <fa-icon :icon="['fas', 'random']" />
-                {{ $t('songlist.listenshuffle') }}
-              </b-button>
-              <b-button
-                :variant="`${
-                  getTheme == 'dark' ? 'outline-light' : 'outline-dark'
-                }`"
-                @click="requestState()"
+                @click="
+                  playContext({ uri: getCurrentPlaylist.uri, shuffle: true })
+                "
               >
                 <fa-icon :icon="['fas', 'random']" />
                 {{ $t('songlist.listenshuffle') }}
@@ -204,7 +199,7 @@ export default {
       'requestPlaylistItems',
       'computeAverageAudioFeatures',
     ]),
-    ...mapActions('player', ['playContext', 'requestState']),
+    ...mapActions('player', ['playContext']),
     requestAnalysis: getAnalysis,
   },
 }

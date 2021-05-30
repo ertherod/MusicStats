@@ -102,9 +102,13 @@ export const actions = {
     let total = 0
     state.currentAlbum.tracks.items.forEach((item) => {
       Object.keys(average).forEach((key) => {
-        average[key] += item.audio_features[key]
+        if (item.audio_features && item.audio_features[key]) {
+          average[key] += item.audio_features[key]
+        }
       })
-      total += 1
+      if (item.audio_features) {
+        total += 1
+      }
     })
     Object.keys(average).forEach((key) => {
       if (key === 'valence' || key === 'energy' || key === 'danceability') {

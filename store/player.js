@@ -110,7 +110,7 @@ export const actions = {
     }
   },
 
-  async playContext({ rootState, dispatch }, uri, shuffle = null) {
+  async playContext({ rootState, dispatch }, { uri, shuffle }) {
     const SpotifyApi = new SpotifyWebApi()
     try {
       SpotifyApi.setAccessToken(rootState.token.access)
@@ -133,9 +133,7 @@ export const actions = {
     const SpotifyApi = new SpotifyWebApi()
     try {
       SpotifyApi.setAccessToken(rootState.token.access)
-      console.log(`${shuffle}`)
-      const response = await SpotifyApi.setShuffle(shuffle)
-      console.log(response.statusCode)
+      await SpotifyApi.setShuffle(shuffle)
     } catch (err) {
       if (
         err.statusCode === 401 &&
