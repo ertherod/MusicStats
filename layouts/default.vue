@@ -29,7 +29,7 @@ export default {
 
 <style>
 html {
-  font-family: 'Arvo';
+  font-family: 'Gotham' !important;
   font-size: 16px;
   word-spacing: 1px;
   -ms-text-size-adjust: 100%;
@@ -45,21 +45,6 @@ html {
 *::after {
   box-sizing: border-box;
   margin: 0;
-}
-
-.body-dark {
-  background-color: #50555c;
-  color: rgb(250, 250, 250);
-}
-
-.body-light {
-  background-color: rgb(221, 231, 238);
-  color: #2d8fd3;
-}
-
-.body-light .container-lg {
-  background-color: rgb(221, 231, 238);
-  height: 100%;
 }
 
 .button--green {

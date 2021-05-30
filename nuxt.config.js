@@ -24,7 +24,7 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [],
+  css: ['~layouts/global.css'],
 
   vue: {
     config: {
@@ -135,7 +135,7 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    analyze: true,
+    analyze: false,
     extractCSS: true,
     extend(config, { isClient }) {
       if (isClient) {

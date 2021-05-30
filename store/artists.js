@@ -2,10 +2,12 @@ import SpotifyWebApi from 'spotify-web-api-node'
 
 export const state = () => ({
   currentArtist: null,
+  topTracks: null,
 })
 
 export const getters = {
   getCurrentArtist: (state) => state.currentArtist,
+  getTopTracks: (state) => state.topTracks,
 }
 
 export const actions = {
@@ -17,6 +19,7 @@ export const actions = {
       // const topTracks = await SpotifyApi.getArtistTopTracks(id, country)
       commit('updateCurrentArtist', artist.body)
       dispatch('getArtistDiscography', { id, limit: 5 })
+      dispatch('getArtistTopTracks', id)
     } catch (err) {
       if (
         err.statusCode === 401 &&
@@ -55,8 +58,25 @@ export const actions = {
     } catch (err) {}
   },
 
-  getArtistTopTracks({ rootState, commit, dispatch }, id) {
+  async getArtistTopTracks({ rootState, commit, dispatch }, id) {
     const country = rootState.country
+    const SpotifyApi = new SpotifyWebApi()
+    try {
+      SpotifyApi.setAccessToken(rootState.token.access)
+      const topTracks = await SpotifyApi.getArtistTopTracks(id, country)
+      const idList = []
+      topTracks.body.tracks.forEach((track) => {
+        idList.push(track.id)
+      })
+      const features = await SpotifyApi.getAudioFeaturesForTracks(idList)
+      topTracks.body.tracks.forEach((track, index) => {
+        topTracks.body.tracks[index] = {
+          track,
+          audio_features: features.body.audio_features[index],
+        }
+      })
+      commit('updateTopTracks', topTracks.body)
+    } catch (err) {}
   },
 }
 
@@ -71,5 +91,9 @@ export const mutations = {
       albums,
       singles,
     }
+  },
+
+  updateTopTracks(state, topTracks) {
+    state.topTracks = topTracks
   },
 }
