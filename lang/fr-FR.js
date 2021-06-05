@@ -92,6 +92,10 @@ export default {
       chill: 'calme',
       agressive: 'agressif',
     },
+    artist: {
+      followers: 'personnes suivent',
+      top_tracks: 'Top Titres',
+    },
   },
 
   songlist: {

@@ -29,7 +29,6 @@ export default {
 
 <style>
 html {
-  font-family: 'Gotham' !important;
   font-size: 16px;
   word-spacing: 1px;
   -ms-text-size-adjust: 100%;

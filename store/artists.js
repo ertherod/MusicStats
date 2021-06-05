@@ -3,11 +3,13 @@ import SpotifyWebApi from 'spotify-web-api-node'
 export const state = () => ({
   currentArtist: null,
   topTracks: null,
+  currentAverageData: null,
 })
 
 export const getters = {
   getCurrentArtist: (state) => state.currentArtist,
   getTopTracks: (state) => state.topTracks,
+  getAverageData: (state) => state.currentAverageData,
 }
 
 export const actions = {
@@ -16,7 +18,6 @@ export const actions = {
     try {
       SpotifyApi.setAccessToken(rootState.token.access)
       const artist = await SpotifyApi.getArtist(id)
-      // const topTracks = await SpotifyApi.getArtistTopTracks(id, country)
       commit('updateCurrentArtist', artist.body)
       dispatch('getArtistDiscography', { id, limit: 5 })
       dispatch('getArtistTopTracks', id)
@@ -55,7 +56,17 @@ export const actions = {
         albums: albums.body,
         singles: singles.body,
       })
-    } catch (err) {}
+    } catch (err) {
+      if (
+        err.statusCode === 401 &&
+        err.body.error.message === 'The access token expired'
+      ) {
+        await dispatch('auth/refreshToken', rootState.token.refresh, {
+          root: true,
+        })
+        dispatch('getArtistDiscography', { id, limit })
+      }
+    }
   },
 
   async getArtistTopTracks({ rootState, commit, dispatch }, id) {
@@ -75,8 +86,61 @@ export const actions = {
           audio_features: features.body.audio_features[index],
         }
       })
-      commit('updateTopTracks', topTracks.body)
-    } catch (err) {}
+      await commit('updateTopTracks', topTracks.body.tracks)
+      dispatch('averageTopTracks')
+    } catch (err) {
+      if (
+        err.statusCode === 401 &&
+        err.body.error.message === 'The access token expired'
+      ) {
+        await dispatch('auth/refreshToken', rootState.token.refresh, {
+          root: true,
+        })
+        dispatch('getArtistTopTracks', id)
+      }
+    }
+  },
+
+  averageTopTracks({ state, commit }) {
+    const average = {
+      valence: 0,
+      energy: 0,
+      tempo: 0,
+      duration_ms: 0,
+      danceability: 0,
+    }
+    let popularity = 0
+    let total = 0
+    state.topTracks.forEach((item) => {
+      Object.keys(average).forEach((key) => {
+        if (
+          item.audio_features &&
+          item.audio_features[key] &&
+          item.track.popularity
+        ) {
+          popularity += item.popularity
+          average[key] += item.audio_features[key]
+        }
+      })
+      if (item.audio_features && item.track.popularity) {
+        total++
+      }
+    })
+    Object.keys(average).forEach((key) => {
+      if (key === 'valence' || key === 'energy' || key === 'danceability') {
+        average[key] = Math.round((average[key] / total) * 100) / 100
+      } else if (!key === 'duration_ms') {
+        average[key] = Math.round(average[key] / total)
+      }
+    })
+    average.popularity = popularity / total
+    average.duration = {
+      hour: parseInt(average.duration_ms / 3600000),
+      min: parseInt((average.duration_ms % 3600000) / 60000),
+      sec: parseInt(((average.duration_ms % 3600000) % 60000) / 1000),
+    }
+
+    commit('updateAverageData', average)
   },
 }
 
@@ -95,5 +159,9 @@ export const mutations = {
 
   updateTopTracks(state, topTracks) {
     state.topTracks = topTracks
+  },
+
+  updateAverageData(state, data) {
+    state.currentAverageData = data
   },
 }

@@ -86,6 +86,10 @@ export default {
       single: 'Single',
       by: 'par',
     },
+    artist: {
+      followers: 'followers',
+      top_tracks: 'Top Tracks',
+    },
   },
 
   songlist: {

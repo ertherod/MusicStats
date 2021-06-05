@@ -130,6 +130,7 @@ export default {
       'Progress',
       'Link',
       'Spinner',
+      'ListGroup',
     ],
   },
 
