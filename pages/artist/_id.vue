@@ -20,6 +20,16 @@
           <ProgressAnalysis v-if="analysis" :analysis="analysis" />
         </b-col>
       </b-row>
+      <b-row>
+        <b-col>
+          <h4 v-if="analysis">
+            {{ $t('') }}
+            {{
+              $t(`analysis.${getAnalysis(analysis.valence, analysis.energy)}`)
+            }}
+          </h4>
+        </b-col>
+      </b-row>
     </b-card>
     <br />
     <b-card
