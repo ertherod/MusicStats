@@ -92,7 +92,7 @@ export const actions = {
     }
   },
 
-  async playTrack({ rootState, dispatch }, uri) {
+  async playTrack({ rootState, dispatch, commit }, uri) {
     const SpotifyApi = new SpotifyWebApi()
     try {
       SpotifyApi.setAccessToken(rootState.token.access)
@@ -107,6 +107,7 @@ export const actions = {
         })
         dispatch('playTrack', uri)
       }
+      commit('setStatus', err.statusCode)
     }
   },
 

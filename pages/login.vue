@@ -59,4 +59,8 @@ h2 {
   display: block;
   width: 50%;
 }
+
+.login_button:hover {
+  color: #1db954;
+}
 </style>

@@ -135,6 +135,13 @@
         :objectlist="getAlbum.tracks.items"
         :texts="{ resultperpage: 'pages.recent.resultperpage' }"
       />
+
+      <br />
+      <div class="text-center">
+        <span v-for="copyright in getAlbum.copyrights" :key="copyright.type"
+          >{{ copyright.text }}<br
+        /></span>
+      </div>
     </div>
     <div v-else class="text-center pt-2">
       <Loading />
@@ -175,7 +182,6 @@ export default {
 }
 
 .track {
-  border-radius: 2vh;
   overflow: hidden;
 }
 </style>

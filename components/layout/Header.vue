@@ -45,6 +45,14 @@
           <fa-icon :icon="['fas', 'wrench']" />
           {{ $t('header.settings') }}
         </b-nav-item>
+        <b-nav-item
+          v-if="isConnected"
+          :to="localePath('/search')"
+          :active="$route.path == localePath('/search')"
+        >
+          <fa-icon :icon="['fas', 'search']" />
+          {{ $t('header.search') }}
+        </b-nav-item>
         <b-nav-item-dropdown
           v-if="getUserData && isConnected"
           :class="getTheme == 'dark' ? 'dropdown-dark' : ''"

@@ -7,11 +7,13 @@
       class="track my-2"
     >
       <template #header>
-        <span class="h5">{{ item.track.name }}</span>
+        <b-link class="h5" :to="`/track/${item.track.id}`">{{
+          item.track.name
+        }}</b-link>
       </template>
 
       <b-row align-h="left" class="mx-1">
-        <b-col cols="4" md="auto">
+        <b-col cols="4" md="2">
           <img :src="item.track.album.images[0].url" class="cover-art" />
         </b-col>
         <b-col cols="8" md="auto">
@@ -269,23 +271,17 @@ export default {
 .cover-art {
   width: auto;
   height: auto;
-  max-height: 8vh;
+
   max-width: 100%;
-  border-radius: 0.5em;
 }
 
 .full-cover {
   width: 100%;
   height: auto;
-  border-radius: 2vh;
 }
 
-.dark-theme a {
+.body-dark a {
   color: rgb(250, 250, 250);
-}
-
-.light-theme a {
-  color: #2d8fd3;
 }
 
 .collapsed > .when-open,

@@ -7,6 +7,7 @@ export default {
     settings: 'Settings',
     myplaylists: 'My Playlists',
     recently_played: 'Recently Played',
+    search: 'Search',
   },
 
   pages: {
@@ -52,10 +53,6 @@ export default {
       average_energy: 'Average energy of the playlist :',
       average_popularity: 'Popularity of the playlist :',
       more: 'More',
-      valence: 'Happiness (valence) :',
-      energy: 'Energy :',
-      popularity: 'Popularity :',
-      danceability: 'Danceability :',
       followers: 'followers',
       in_single: 'In single',
       in_album: 'In album',
@@ -85,10 +82,30 @@ export default {
       ep: 'EP',
       single: 'Single',
       by: 'par',
+      analysis: 'This album is',
+      happy: 'happy',
+      sad: 'sad',
+      chill: 'calm',
+      agressive: 'agressive',
     },
     artist: {
       followers: 'followers',
       top_tracks: 'Top Tracks',
+      artist_happiness: "This artist's discography is mostly ",
+      albums: 'Albums',
+      singles: 'Singles and EPs',
+    },
+    search: {
+      title: 'Search',
+      placeholder: 'Enter some keywords...',
+      options: 'Options',
+      include: 'Includes :',
+      resultperpage: 'Number of result per category :',
+      tracks: 'Tracks',
+      albums: 'Albums',
+      artists: 'Artists',
+      playlists: 'Playlists',
+      open_page: 'Open dedicated page',
     },
   },
 
@@ -96,7 +113,7 @@ export default {
     nextQueue: 'Add to queue',
     listen: 'Listen',
     listenshuffle: 'Shuffle listen',
-    noplayer: 'You need to have Spotify opened and playing to add to queue',
+    noplayer: 'You need to have Spotify opened and playing to do that !',
   },
 
   error: {
@@ -126,6 +143,10 @@ export default {
     sad: 'sad',
     chill: 'calm',
     agressive: 'agressive',
+    valence: 'Happiness (valence) :',
+    energy: 'Energy :',
+    popularity: 'Popularity :',
+    danceability: 'Danceability :',
   },
 
   date: {

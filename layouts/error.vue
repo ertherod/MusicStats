@@ -5,13 +5,18 @@
       <p>{{ $t('error.nopage') }}</p>
     </div>
     <h1 v-else>An error occurred</h1>
-    <nuxt-link
-      :to="localePath('/')"
-      :class="`btn ${
-        getTheme == 'dark' ? 'btn-outline-light' : 'btn-outline-dark'
-      } btn-floating p-2 m-1 mx-auto login_button`"
-      ><fa-icon :icon="['fas', 'home']" /> {{ $t('error.return_home') }}
-    </nuxt-link>
+    <b-button-group>
+      <b-button
+        :to="localePath('/')"
+        :variant="getTheme == 'dark' ? 'outline-light' : 'outline-dark'"
+        ><fa-icon :icon="['fas', 'home']" /> {{ $t('error.return_home') }}
+      </b-button>
+      <b-button
+        :variant="getTheme == 'dark' ? 'outline-light' : 'outline-dark'"
+        @click="reloadPage"
+        >Reload page</b-button
+      >
+    </b-button-group>
   </div>
 </template>
 
@@ -24,6 +29,11 @@ export default {
   props: ['error'],
   computed: {
     ...mapGetters(['getTheme']),
+  },
+  methods: {
+    reloadPage() {
+      window.location.reload()
+    },
   },
 }
 </script>

@@ -19,7 +19,7 @@ export const actions = {
       SpotifyApi.setAccessToken(rootState.token.access)
       const artist = await SpotifyApi.getArtist(id)
       commit('updateCurrentArtist', artist.body)
-      dispatch('getArtistDiscography', { id, limit: 5 })
+      dispatch('getArtistDiscography', id)
       dispatch('getArtistTopTracks', id)
     } catch (err) {
       if (
@@ -34,10 +34,7 @@ export const actions = {
     }
   },
 
-  async getArtistDiscography(
-    { rootState, commit, dispatch },
-    { id, limit = null }
-  ) {
+  async getArtistDiscography({ rootState, commit, dispatch }, id) {
     const country = rootState.country
     const SpotifyApi = new SpotifyWebApi()
     try {
@@ -45,16 +42,38 @@ export const actions = {
       const albums = await SpotifyApi.getArtistAlbums(id, {
         album_type: 'album',
         country,
-        limit,
+        limit: 10,
       })
+      let albumsList = []
+      albums.body.items.forEach((item, index) => {
+        if (
+          index === 0 ||
+          albums.body.items[index - 1].name.toLowerCase() !==
+            item.name.toLowerCase()
+        ) {
+          albumsList.push(item)
+        }
+      })
+      albumsList = albumsList.slice(0, 5)
       const singles = await SpotifyApi.getArtistAlbums(id, {
         album_type: 'single',
         country,
-        limit,
+        limit: 10,
       })
+      let singlesList = []
+      singles.body.items.forEach((item, index) => {
+        if (
+          index === 0 ||
+          singles.body.items[index - 1].name.toLowerCase() !==
+            item.name.toLowerCase()
+        ) {
+          singlesList.push(item)
+        }
+      })
+      singlesList = singlesList.slice(0, 5)
       commit('updateArtistDiscography', {
-        albums: albums.body,
-        singles: singles.body,
+        albums: albumsList,
+        singles: singlesList,
       })
     } catch (err) {
       if (
@@ -64,7 +83,7 @@ export const actions = {
         await dispatch('auth/refreshToken', rootState.token.refresh, {
           root: true,
         })
-        dispatch('getArtistDiscography', { id, limit })
+        dispatch('getArtistDiscography', id)
       }
     }
   },

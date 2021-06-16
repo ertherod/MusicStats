@@ -68,6 +68,8 @@ export default {
             'faPlay',
             'faRecordVinyl',
             'faRandom',
+            'faSearch',
+            'faExternalLinkSquareAlt',
           ],
           brands: ['faTwitter', 'faInstagram', 'faGithub', 'faSpotify'],
           regular: ['faClock', 'faAngry', 'faFrown', 'faSmileBeam', 'faSmile'],
@@ -93,7 +95,6 @@ export default {
       {
         detectBrowserLanguage: {
           useCookie: true,
-          cookieKey: 'lang',
           onlyOnRoot: true,
         },
         locales: [
@@ -107,7 +108,7 @@ export default {
           },
         ],
         langDir: 'lang/',
-        strategy: 'no_prefix',
+        strategy: 'prefix_and_default',
         defaultLocale: 'fr',
         vueI18n: {
           fallbackLocale: 'en',
@@ -131,6 +132,8 @@ export default {
       'Link',
       'Spinner',
       'ListGroup',
+      'FormInput',
+      'FormCheckbox',
     ],
   },
 

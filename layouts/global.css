@@ -4,11 +4,10 @@
 }
 
 .body-light {
-  background-color: rgb(221, 231, 238);
-  color: #2d8fd3;
+  background-color: rgb(223, 223, 223);
 }
 
 .body-light .container-lg {
-  background-color: rgb(221, 231, 238);
+  background-color:rgb(223, 223, 223);
   height: 100%;
 }

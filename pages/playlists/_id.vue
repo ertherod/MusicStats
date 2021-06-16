@@ -38,10 +38,7 @@
           <div class="col-md-8 px-5 mb-3">
             <h4>
               {{ $t('pages.myplaylists.by') }}
-              <b-link
-                :to="localePath(`/user/${getCurrentPlaylist.owner.id}`)"
-                >{{ getCurrentPlaylist.owner.display_name }}</b-link
-              >
+              {{ getCurrentPlaylist.owner.display_name }}
             </h4>
             <h6 v-if="getCurrentPlaylist.description !== ''">
               {{ getCurrentPlaylist.description }}
@@ -211,7 +208,6 @@ export default {
 }
 
 .track {
-  border-radius: 2vh;
   overflow: hidden;
 }
 </style>

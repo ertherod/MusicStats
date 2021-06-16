@@ -7,6 +7,7 @@ export default {
     settings: 'Paramètres',
     myplaylists: 'Mes Playlists',
     recently_played: 'Ecoutés récemment ',
+    search: 'Rechercher',
   },
 
   pages: {
@@ -61,7 +62,7 @@ export default {
       in_single: 'Dans le single',
       in_album: "Dans l'album",
       in_ep: "Dans l'EP",
-      preview: 'Extrait du titre',
+      preview: 'Extrait du titre :',
       no_preview: "Il n'y a pas d'extrait disponible",
       released_on: 'Sorti le ',
     },
@@ -95,6 +96,21 @@ export default {
     artist: {
       followers: 'personnes suivent',
       top_tracks: 'Top Titres',
+      artist_happiness: 'Cet(te) artiste a une discographie plutôt ',
+      albums: 'Albums',
+      singles: 'Singles et EPs',
+    },
+    search: {
+      title: 'Rechercher',
+      placeholder: 'Entrez un ou plusieurs mots-clés...',
+      options: 'Options',
+      include: 'Inclure :',
+      resultperpage: 'Nombre de résultats par catégorie :',
+      tracks: 'Titres',
+      albums: 'Albums',
+      artists: 'Artistes',
+      playlists: 'Playlists',
+      open_page: 'Ouvrir la page dédiée',
     },
   },
 
@@ -102,7 +118,7 @@ export default {
     nextQueue: 'Prochaine écoute',
     listen: 'Écouter',
     noplayer:
-      "Vous devez avoir Spotify en cours d'écoute pour ajouter à la suite !",
+      "Vous devez avoir Spotify en cours d'écoute pour pouvoir faire ceci !",
     listenshuffle: 'Écouter en aléatoire',
   },
 

@@ -41,9 +41,7 @@
       </b-card-body>
       <template #footer>
         {{ $t('pages.myplaylists.by') }}
-        <b-link :to="localePath(`/user/${item.owner.id}`)">{{
-          item.owner.display_name
-        }}</b-link>
+        {{ item.owner.display_name }}
       </template>
     </b-card>
   </b-card-group>
@@ -68,7 +66,6 @@ export default {
 
 <style>
 .playlist-img {
-  border-radius: 2vh;
   width: 100%;
 }
 
@@ -81,6 +78,6 @@ export default {
 }
 
 .list-light a {
-  color: #2d8fd3;
+  color: #000000;
 }
 </style>
