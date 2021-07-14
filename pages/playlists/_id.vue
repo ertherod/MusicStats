@@ -1,9 +1,5 @@
 <template>
-  <div
-    :class="`container-lg pt-3 pb-5 ${
-      getTheme == 'dark' ? 'dark-theme' : 'light-theme'
-    }`"
-  >
+  <div class="container-lg pt-3 pb-5 dark-theme">
     <div
       v-if="
         getCurrentPlaylist &&
@@ -11,10 +7,10 @@
         getCurrentAverageData
       "
     >
-      <b-card :bg-variant="getTheme == 'dark' ? 'dark' : 'light'" class="track">
+      <b-card bg-variant="dark" class="track">
         <template #header>
-          <b-row align-h="center">
-            <span class="h3">
+          <b-row align-h="center" class="m-2">
+            <span class="h3 text-center">
               <fa-icon :icon="['fas', 'list']" />
               {{ getCurrentPlaylist.name }}</span
             >
@@ -123,13 +119,14 @@
             </div>
           </div>
         </b-row>
-        <template v-if="getUserData.product === 'premium'" #footer>
+        <template
+          v-if="getUserData && getUserData.product === 'premium'"
+          #footer
+        >
           <b-row align-h="center">
             <b-button-group class="mt-2">
               <b-button
-                :variant="`${
-                  getTheme == 'dark' ? 'outline-light' : 'outline-dark'
-                }`"
+                variant="outline-light"
                 @click="
                   playContext({ uri: getCurrentPlaylist.uri, shuffle: false })
                 "
@@ -138,15 +135,27 @@
                 {{ $t('songlist.listen') }}
               </b-button>
               <b-button
-                :variant="`${
-                  getTheme == 'dark' ? 'outline-light' : 'outline-dark'
-                }`"
+                variant="outline-light"
                 @click="
                   playContext({ uri: getCurrentPlaylist.uri, shuffle: true })
                 "
               >
                 <fa-icon :icon="['fas', 'random']" />
                 {{ $t('songlist.listenshuffle') }}
+              </b-button>
+              <b-button
+                v-if="
+                  getUserData && getUserData.id !== getCurrentPlaylist.owner.id
+                "
+                variant="outline-light"
+                @click="updateSaved"
+              >
+                <div v-if="saved">
+                  <fa-icon :icon="['fas', 'heart']" /> {{ $t('library.saved') }}
+                </div>
+                <div v-else>
+                  <fa-icon :icon="['far', 'heart']" /> {{ $t('library.save') }}
+                </div>
               </b-button>
             </b-button-group>
           </b-row>
@@ -178,9 +187,12 @@ import { getAnalysis } from '~/utils'
 export default {
   name: 'PlaylistPage',
   components: { ListButtonFilter },
+  middleware: 'auth',
+  data: () => ({
+    saved: null,
+  }),
   computed: {
     ...mapGetters('playlists', ['getCurrentPlaylist', 'getCurrentAverageData']),
-    ...mapGetters(['getTheme']),
     ...mapGetters('userprofile', ['getUserData']),
   },
   watch: {
@@ -190,14 +202,43 @@ export default {
   },
   async mounted() {
     await this.requestPlaylistItems(this.$route.params.id)
+    if (
+      this.getUserData &&
+      this.getCurrentPlaylist &&
+      this.getUserData.id !== this.getCurrentPlaylist.owner.id
+    ) {
+      this.saved = await this.checkPlaylist({
+        ownerId: this.getCurrentPlaylist.owner.id,
+        playlistId: this.$route.params.id,
+        userId: this.getUserData.id,
+      })
+    }
   },
   methods: {
     ...mapActions('playlists', [
       'requestPlaylistItems',
       'computeAverageAudioFeatures',
     ]),
+    ...mapActions('library', [
+      'savePlaylist',
+      'checkPlaylist',
+      'removePlaylist',
+    ]),
     ...mapActions('player', ['playContext']),
     requestAnalysis: getAnalysis,
+    async updateSaved() {
+      const isSaved = await this.checkPlaylist({
+        ownerId: this.getCurrentPlaylist.owner.id,
+        playlistId: this.$route.params.id,
+        userId: this.getUserData.id,
+      })
+      if (!isSaved) {
+        await this.savePlaylist(this.$route.params.id)
+      } else {
+        await this.removePlaylist(this.$route.params.id)
+      }
+      this.saved = !isSaved
+    },
   },
 }
 </script>

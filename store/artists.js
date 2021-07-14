@@ -30,6 +30,8 @@ export const actions = {
           root: true,
         })
         dispatch('requestArtist', id)
+      } else {
+        throw err
       }
     }
   },
@@ -39,41 +41,43 @@ export const actions = {
     const SpotifyApi = new SpotifyWebApi()
     try {
       SpotifyApi.setAccessToken(rootState.token.access)
-      const albums = await SpotifyApi.getArtistAlbums(id, {
+      const finalAlbums = await SpotifyApi.getArtistAlbums(id, {
         album_type: 'album',
         country,
-        limit: 10,
+        limit: 20,
       })
-      let albumsList = []
-      albums.body.items.forEach((item, index) => {
-        if (
-          index === 0 ||
-          albums.body.items[index - 1].name.toLowerCase() !==
-            item.name.toLowerCase()
-        ) {
-          albumsList.push(item)
-        }
-      })
-      albumsList = albumsList.slice(0, 5)
-      const singles = await SpotifyApi.getArtistAlbums(id, {
+      let albums = finalAlbums
+      let turn = 0
+      while (albums.body.next) {
+        albums = await SpotifyApi.getArtistAlbums(id, {
+          album_type: 'single',
+          country,
+          limit: 20,
+          offset: turn * 20,
+        })
+        finalAlbums.body.items.push(...albums.body.items)
+        turn++
+      }
+      const finalSingles = await SpotifyApi.getArtistAlbums(id, {
         album_type: 'single',
         country,
-        limit: 10,
+        limit: 20,
       })
-      let singlesList = []
-      singles.body.items.forEach((item, index) => {
-        if (
-          index === 0 ||
-          singles.body.items[index - 1].name.toLowerCase() !==
-            item.name.toLowerCase()
-        ) {
-          singlesList.push(item)
-        }
-      })
-      singlesList = singlesList.slice(0, 5)
+      let singles = finalSingles
+      turn = 0
+      while (singles.body.next) {
+        singles = await SpotifyApi.getArtistAlbums(id, {
+          album_type: 'single',
+          country,
+          limit: 20,
+          offset: turn * 20,
+        })
+        finalSingles.body.items.push(...singles.body.items)
+        turn++
+      }
       commit('updateArtistDiscography', {
-        albums: albumsList,
-        singles: singlesList,
+        albums: albums.body.items,
+        singles: finalSingles.body.items,
       })
     } catch (err) {
       if (
@@ -84,6 +88,8 @@ export const actions = {
           root: true,
         })
         dispatch('getArtistDiscography', id)
+      } else {
+        throw err
       }
     }
   },
@@ -116,6 +122,8 @@ export const actions = {
           root: true,
         })
         dispatch('getArtistTopTracks', id)
+      } else {
+        throw err
       }
     }
   },

@@ -1,20 +1,14 @@
 <template>
   <b-container fluid="lg" class="pt-3 pb-5 mb-5">
-    <div
-      v-if="
-        getCurrentArtist &&
-        getCurrentArtist.id === $route.params.id &&
-        isReady()
-      "
-    >
-      <b-card class="card" :bg-variant="getTheme == 'dark' ? 'dark' : 'light'">
+    <div v-if="getCurrentArtist && getCurrentArtist.id === $route.params.id">
+      <b-card class="card" bg-variant="dark">
         <b-row>
           <b-col md="4">
             <img
               v-if="getCurrentArtist.images && getCurrentArtist.images[0]"
               :src="getCurrentArtist.images[0].url"
               alt="Album image"
-              class="playlist-img"
+              class="artist-img"
             />
           </b-col>
           <b-col>
@@ -35,6 +29,32 @@
             </h5>
           </b-col>
         </b-row>
+        <template #footer>
+          <b-row align-h="center">
+            <b-button-group class="mt-2">
+              <b-button variant="outline-light" @click="updateFollow">
+                <div v-if="follow">
+                  <fa-icon :icon="['fas', 'heart']" />
+                  {{ $t('pages.artist.following') }}
+                </div>
+                <div v-else>
+                  <fa-icon :icon="['far', 'heart']" />
+                  {{ $t('pages.artist.follow') }}
+                </div>
+              </b-button>
+              <b-button
+                v-if="getUserData && getUserData.product === 'premium'"
+                variant="outline-light"
+                @click="
+                  playContext({ uri: getCurrentArtist.uri, shuffle: false })
+                "
+              >
+                <fa-icon :icon="['fas', 'play']" />
+                {{ $t('songlist.listen') }}
+              </b-button>
+            </b-button-group>
+          </b-row>
+        </template>
       </b-card>
       <br />
       <b-card
@@ -44,11 +64,13 @@
           getTopTracks
         "
         class="card"
-        :bg-variant="getTheme == 'dark' ? 'dark' : 'light'"
+        bg-variant="dark"
       >
-        <h2 class="text-center">
-          {{ $t('pages.artist.top_tracks') }}
-        </h2>
+        <template #header>
+          <h2 class="text-center my-auto">
+            {{ $t('pages.artist.top_tracks') }}
+          </h2>
+        </template>
         <b-list-group>
           <b-list-group-item
             v-for="(item, index) in getTopTracks"
@@ -56,7 +78,7 @@
             class="list p-0"
           >
             <b-row class="m-0" align-h="start">
-              <b-col cols="3" md="1">
+              <b-col cols="4" md="1">
                 <img
                   v-if="item.track.album.images && item.track.album.images[2]"
                   :src="item.track.album.images[2].url"
@@ -69,6 +91,7 @@
               >
                 <div>
                   {{ index + 1 }}.
+                  <span v-if="item.track.explicit" class="explicit">E</span>
                   {{ item.track.name }}
                 </div>
                 <div>
@@ -83,21 +106,8 @@
             <b-row align-h="center">
               <b-col cols="12">
                 <b-collapse :id="`collapse-${item.track.id}`" class="mt-3">
-                  <b-card
-                    :bg-variant="getTheme == 'dark' ? 'dark' : 'light'"
-                    class="track my-2"
-                  >
-                    <b-row>
-                      <b-col cols="12" md="4" class="mb-2">
-                        <img
-                          v-if="
-                            item.track.album.images &&
-                            item.track.album.images[0]
-                          "
-                          :src="item.track.album.images[0].url"
-                          class="full-cover"
-                        />
-                      </b-col>
+                  <b-card bg-variant="dark" class="track my-2">
+                    <b-row align-h="center">
                       <b-col cols="12" md="8">
                         <h6>
                           {{ $t('pages.myplaylists.by') }}
@@ -218,12 +228,10 @@
                     <b-row align-h="center">
                       <b-button-group class="mt-2">
                         <b-button
-                          v-if="getUserData.product === 'premium'"
-                          :variant="`${
-                            getTheme == 'dark'
-                              ? 'outline-light'
-                              : 'outline-dark'
-                          }`"
+                          v-if="
+                            getUserData && getUserData.product === 'premium'
+                          "
+                          variant="outline-light"
                           @click="playTrack(item.track.uri)"
                         >
                           <fa-icon :icon="['fas', 'play']" />
@@ -231,12 +239,10 @@
                         </b-button>
 
                         <b-button
-                          v-if="getUserData.product === 'premium'"
-                          :variant="`${
-                            getTheme == 'dark'
-                              ? 'outline-light'
-                              : 'outline-dark'
-                          }`"
+                          v-if="
+                            getUserData && getUserData.product === 'premium'
+                          "
+                          variant="outline-light"
                           @click="addToQueue(item.track.uri)"
                         >
                           <fa-icon :icon="['fas', 'step-forward']" />
@@ -253,14 +259,15 @@
       </b-card>
       <br />
       <b-card
-        v-if="getCurrentArtist.albums && getCurrentArtist.albums.length != 0"
+        v-if="topAlbums && topAlbums.length !== 0"
         class="card"
-        :bg-variant="getTheme == 'dark' ? 'dark' : 'light'"
-      >
-        <h2 class="text-center">{{ $t('pages.artist.albums') }}</h2>
+        bg-variant="dark"
+        ><template #header>
+          <h2 class="text-center">{{ $t('pages.artist.albums') }}</h2></template
+        >
         <b-list-group>
           <b-list-group-item
-            v-for="album in getCurrentArtist.albums"
+            v-for="album in topAlbums"
             :key="album.id"
             class="list p-0"
           >
@@ -281,17 +288,31 @@
             </b-link>
           </b-list-group-item>
         </b-list-group>
+        <template #footer>
+          <b-row align-h="center">
+            <b-button
+              variant="outline-light"
+              :to="localePath(`/artist/${$route.params.id}/albums`)"
+              >{{ $t('pages.artist.view_albums') }}
+              {{ getCurrentArtist.name }}</b-button
+            >
+          </b-row>
+        </template>
       </b-card>
       <br />
       <b-card
-        v-if="getCurrentArtist.singles"
+        v-if="topSingles && topSingles.length !== 0"
         class="card"
-        :bg-variant="getTheme == 'dark' ? 'dark' : 'light'"
+        bg-variant="dark"
       >
-        <h2 class="text-center">{{ $t('pages.artist.singles') }}</h2>
+        <template #header>
+          <h2 class="text-center">
+            {{ $t('pages.artist.singles') }}
+          </h2></template
+        >
         <b-list-group>
           <b-list-group-item
-            v-for="single in getCurrentArtist.singles"
+            v-for="single in topSingles"
             :key="single.id"
             class="list p-0"
           >
@@ -312,7 +333,20 @@
             </b-link>
           </b-list-group-item>
         </b-list-group>
+        <template #footer>
+          <b-row align-h="center">
+            <b-button
+              variant="outline-light"
+              :to="localePath(`/artist/${$route.params.id}/singles`)"
+              >{{ $t('pages.artist.view_singles') }}
+              {{ getCurrentArtist.name }}</b-button
+            >
+          </b-row>
+        </template>
       </b-card>
+
+      <br /><br />
+      <p class="text-center">{{ $t('pages.artist.warning') }}</p>
     </div>
     <div v-else class="text-center pt-2">
       <Loading />
@@ -330,13 +364,16 @@ export default {
   components: {
     Loading,
   },
+  middleware: 'auth',
+  data: () => ({
+    follow: null,
+  }),
   computed: {
     ...mapGetters('artists', [
       'getCurrentArtist',
       'getTopTracks',
       'getAverageData',
     ]),
-    ...mapGetters(['getTheme']),
     ...mapGetters('userprofile', ['getUserData']),
     followers_number() {
       const number = this.getCurrentArtist.followers.total
@@ -347,6 +384,18 @@ export default {
       } else {
         return number
       }
+    },
+    topAlbums() {
+      if (this.getCurrentArtist.albums) {
+        return this.getCurrentArtist.albums.slice(0, 5)
+      }
+      return []
+    },
+    topSingles() {
+      if (this.getCurrentArtist.singles) {
+        return this.getCurrentArtist.singles.slice(0, 5)
+      }
+      return []
     },
     analysis() {
       if (this.getAverageData) {
@@ -361,12 +410,23 @@ export default {
       }
     },
   },
-  mounted() {
-    this.requestFullArtist(this.$route.params.id)
+  async mounted() {
+    await this.requestFullArtist(this.$route.params.id)
+    this.follow = await this.checkArtistFollow(this.$route.params.id)
   },
   methods: {
     ...mapActions('artists', ['requestFullArtist']),
-    ...mapActions('player', ['addToQueue', 'skipTrack', 'playTrack']),
+    ...mapActions('player', [
+      'addToQueue',
+      'skipTrack',
+      'playTrack',
+      'playContext',
+    ]),
+    ...mapActions('library', [
+      'followArtist',
+      'checkArtistFollow',
+      'unfollowArtist',
+    ]),
     getDateFromISO(date, type) {
       date = date.split('-')
       if (type === 'y') {
@@ -405,33 +465,26 @@ export default {
       this.currentTrack = newTrack
     },
     getAnalysis,
-    isReady() {
-      let status = false
-      if (
-        this.getCurrentArtist &&
-        this.getTopTracks &&
-        this.getTopTracks[0] &&
-        this.getTopTracks[0].track.artists
-      ) {
-        this.getTopTracks[0].track.artists.forEach((item) => {
-          if (item.id === this.getCurrentArtist.id) {
-            status = true
-          }
-        })
+    async updateFollow() {
+      const isFollow = await this.checkArtistFollow(this.$route.params.id)
+      if (!isFollow) {
+        await this.followArtist(this.$route.params.id)
+      } else {
+        await this.unfollowArtist(this.$route.params.id)
       }
-      return status
+      this.follow = !isFollow
     },
   },
 }
 </script>
 
 <style scoped>
-.card {
-  border-radius: 2em;
-}
-
 .list {
   background-color: #0000 !important;
+}
+
+.artist-img {
+  width: 100%;
 }
 
 .list > div {

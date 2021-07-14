@@ -42,6 +42,8 @@ export const actions = {
           root: true,
         })
         dispatch('requestPlaylistList')
+      } else {
+        throw err
       }
     }
   },
@@ -87,11 +89,12 @@ export const actions = {
             'next,items(added_at,added_by,track(artists,album(!available_markets),is_local,duration,explicit,name,popularity,preview_url,id,uri,type))',
         })
         idlist = []
-        data.body.items.forEach((item) => {
-          if (!item.is_local || item.track.type === 'episode') {
+        const items = data.body.items
+        data.body.items = []
+        items.forEach((item) => {
+          if (!item.track.is_local && item.track.type !== 'episode') {
             idlist.push(item.track.id)
-          } else {
-            data.body.items.splice(data.body.items.indexOf(item), 1)
+            data.body.items.push(item)
           }
         })
         features = await SpotifyApi.getAudioFeaturesForTracks(idlist)
@@ -117,6 +120,42 @@ export const actions = {
           root: true,
         })
         dispatch('requestPlaylistItems', id)
+      } else {
+        throw err
+      }
+    }
+  },
+
+  async createAndAddPlaylist(
+    { rootState, dispatch },
+    { name, status, description, uris }
+  ) {
+    const SpotifyApi = new SpotifyWebApi()
+    try {
+      SpotifyApi.setAccessToken(rootState.token.access)
+      const newPlaylist = await SpotifyApi.createPlaylist(name, {
+        description,
+        public: status,
+        collaborative: false,
+      })
+      const newTracks = await SpotifyApi.addTracksToPlaylist(
+        newPlaylist.body.id,
+        uris
+      )
+      if (newTracks.status === 200) {
+        return 200
+      }
+    } catch (err) {
+      if (
+        err.statusCode === 401 &&
+        err.body.error.message === 'The access token expired'
+      ) {
+        await dispatch('auth/refreshToken', rootState.token.refresh, {
+          root: true,
+        })
+        dispatch('createAndAddPlaylist', { name, status, description, uris })
+      } else {
+        throw err
       }
     }
   },

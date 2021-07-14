@@ -86,6 +86,8 @@ export const actions = {
           root: true,
         })
         dispatch('requestAlbum', id)
+      } else {
+        throw err
       }
     }
   },

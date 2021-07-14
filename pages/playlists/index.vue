@@ -10,7 +10,7 @@
 
       <ListButtonFilter
         type="playlist_list"
-        :filters="{ list: [3, 6, 9, 12, 15], filter: 9 }"
+        :filters="{ list: [4, 6, 12], filter: 12 }"
         :objectlist="getPlaylistList.items"
         :texts="{ resultperpage: 'pages.myplaylists.resultperpage' }"
       />
@@ -29,9 +29,9 @@ import Loading from '~/components/Loading.vue'
 export default {
   name: 'MyPlaylists',
   components: { ListButtonFilter, Loading },
+  middleware: 'auth',
   computed: {
     ...mapGetters('playlists', ['getPlaylistList']),
-    ...mapGetters(['getTheme']),
   },
   mounted() {
     this.requestPlaylistList()

@@ -12,12 +12,8 @@ export default {
   },
   async mounted() {
     if (this.$route.query.state === this.getSecret && this.$route.query.code) {
-      const logged = await this.requestToken(this.$route.query.code)
-      if (logged) {
-        this.$router.push(this.localePath('/'))
-      } else {
-        this.$router.push(this.localePath('/'))
-      }
+      await this.requestToken(this.$route.query.code)
+      this.$router.push(this.localePath('/'))
     } else {
       this.$router.push(this.localePath('/error'))
     }

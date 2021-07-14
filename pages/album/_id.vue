@@ -1,14 +1,10 @@
 <template>
-  <div
-    :class="`container-lg pt-3 pb-5 ${
-      getTheme == 'dark' ? 'dark-theme' : 'light-theme'
-    }`"
-  >
+  <div class="container-lg pt-3 pb-5 dark-theme">
     <div v-if="getAlbum && getAlbum.id == $route.params.id">
-      <b-card :bg-variant="getTheme == 'dark' ? 'dark' : 'light'" class="track">
+      <b-card bg-variant="dark" class="track">
         <template #header>
-          <b-row align-h="center">
-            <span class="h3">
+          <b-row align-h="center" class="m-2">
+            <span class="h3 text-center">
               <fa-icon :icon="['fas', 'record-vinyl']" />
               {{ getAlbum.name }}</span
             >
@@ -101,26 +97,32 @@
             </div>
           </div>
         </b-row>
-        <template v-if="getUserData.product === 'premium'" #footer>
+        <template #footer>
           <b-row align-h="center">
             <b-button-group class="mt-2">
               <b-button
-                :variant="`${
-                  getTheme == 'dark' ? 'outline-light' : 'outline-dark'
-                }`"
+                v-if="getUserData && getUserData.product === 'premium'"
+                variant="outline-light"
                 @click="playContext({ uri: getAlbum.uri, shuffle: false })"
               >
                 <fa-icon :icon="['fas', 'play']" />
                 {{ $t('songlist.listen') }}
               </b-button>
               <b-button
-                :variant="`${
-                  getTheme == 'dark' ? 'outline-light' : 'outline-dark'
-                }`"
+                v-if="getUserData && getUserData.product === 'premium'"
+                variant="outline-light"
                 @click="playContext({ uri: getAlbum.uri, shuffle: true })"
               >
                 <fa-icon :icon="['fas', 'random']" />
                 {{ $t('songlist.listenshuffle') }}
+              </b-button>
+              <b-button variant="outline-light" @click="updateSaved">
+                <div v-if="saved">
+                  <fa-icon :icon="['fas', 'heart']" /> {{ $t('library.saved') }}
+                </div>
+                <div v-else>
+                  <fa-icon :icon="['far', 'heart']" /> {{ $t('library.save') }}
+                </div>
               </b-button>
             </b-button-group>
           </b-row>
@@ -159,19 +161,34 @@ import { getAnalysis } from '~/utils'
 export default {
   name: 'PlaylistPage',
   components: { ListButtonFilter },
+  middleware: 'auth',
+  data: () => ({
+    saved: null,
+  }),
   computed: {
     ...mapGetters('albums', ['getAlbum', 'getAverageFeatures']),
-    ...mapGetters(['getTheme']),
     ...mapGetters('userprofile', ['getUserData']),
+    ...mapGetters('library', ['getStatus']),
   },
   async mounted() {
     await this.requestAlbum(this.$route.params.id)
     await this.requestAverageFeatures()
+    this.saved = await this.checkAlbum(this.$route.params.id)
   },
   methods: {
     ...mapActions('player', ['playContext']),
     ...mapActions('albums', ['requestAlbum', 'requestAverageFeatures']),
+    ...mapActions('library', ['saveAlbum', 'checkAlbum', 'removeAlbum']),
     requestAnalysis: getAnalysis,
+    async updateSaved() {
+      const isSaved = await this.checkAlbum(this.$route.params.id)
+      if (!isSaved) {
+        await this.saveAlbum(this.$route.params.id)
+      } else {
+        await this.removeAlbum(this.$route.params.id)
+      }
+      this.saved = !isSaved
+    },
   },
 }
 </script>

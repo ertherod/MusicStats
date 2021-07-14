@@ -1,6 +1,6 @@
 <template>
   <b-container fluid="lg" class="pt-3 pb-5 mb-5">
-    <b-card class="card" :bg-variant="getTheme === 'dark' ? 'dark' : 'light'">
+    <b-card class="card" bg-variant="dark">
       <template #header>
         <b-row align-h="center">
           <span class="h3">
@@ -9,18 +9,22 @@
         </b-row>
       </template>
       <b-row class="mx-3">
-        <b-form-input
-          v-model="search"
-          type="search"
-          :placeholder="$t('pages.search.placeholder')"
-          @input="launchSearch()"
-        />
+        <b-input-group class="search">
+          <b-form-input
+            v-model="search"
+            type="search"
+            :placeholder="$t('pages.search.placeholder')"
+            @keyup.enter="launchSearch()"
+          />
+          <b-input-group-append>
+            <b-button variant="outline-primary" @click="launchSearch()"
+              ><fa-icon :icon="['fas', 'search']"
+            /></b-button>
+          </b-input-group-append>
+        </b-input-group>
       </b-row>
       <b-row align-h="center" class="my-2">
-        <b-button
-          v-b-toggle="'option-collapse'"
-          :variant="getTheme == 'dark' ? 'outline-light' : 'outline-dark'"
-        >
+        <b-button v-b-toggle="'option-collapse'" variant="outline-light">
           {{ $t('pages.search.options') }}
           <fa-icon :icon="['fas', 'chevron-up']" class="when-open" /><fa-icon
             :icon="['fas', 'chevron-down']"
@@ -29,7 +33,7 @@
         </b-button>
       </b-row>
       <b-collapse id="option-collapse">
-        <b-card :bg-variant="getTheme === 'dark' ? 'dark' : 'light'">
+        <b-card bg-variant="dark">
           <b-row>
             <b-col md="6" class="px-5 my-3">
               <h6>{{ $t('pages.search.include') }}</h6>
@@ -79,7 +83,7 @@
         getSearch && getSearch.tracks && getSearch.tracks.items.length !== 0
       "
       class="card"
-      :bg-variant="getTheme === 'dark' ? 'dark' : 'light'"
+      bg-variant="dark"
     >
       <template #header>
         <b-row v-b-toggle="`tracks-collapse`" align-h="between" class="mx-3 h3">
@@ -99,7 +103,7 @@
             :key="item.id"
             class="list p-0"
           >
-            <b-row class="m-0" align-h="start">
+            <b-row class="m-0 item" align-h="start">
               <b-col cols="3" md="1">
                 <img :src="item.album.images[2].url" />
               </b-col>
@@ -123,10 +127,7 @@
             <b-row align-h="center">
               <b-col cols="12">
                 <b-collapse :id="`collapse-${item.id}`" class="mt-3">
-                  <b-card
-                    :bg-variant="getTheme == 'dark' ? 'dark' : 'light'"
-                    class="track my-2"
-                  >
+                  <b-card bg-variant="dark" class="track my-2">
                     <b-row>
                       <b-col cols="12" md="4" class="mb-2">
                         <img
@@ -225,12 +226,10 @@
                         <b-row align-h="center">
                           <b-button-group class="mt-2">
                             <b-button
-                              v-if="getUserData.product === 'premium'"
-                              :variant="`${
-                                getTheme == 'dark'
-                                  ? 'outline-light'
-                                  : 'outline-dark'
-                              }`"
+                              v-if="
+                                getUserData && getUserData.product === 'premium'
+                              "
+                              variant="outline-light"
                               @click="playTrack(item.uri)"
                             >
                               <fa-icon :icon="['fas', 'play']" />
@@ -238,23 +237,17 @@
                             </b-button>
 
                             <b-button
-                              v-if="getUserData.product === 'premium'"
-                              :variant="`${
-                                getTheme == 'dark'
-                                  ? 'outline-light'
-                                  : 'outline-dark'
-                              }`"
+                              v-if="
+                                getUserData && getUserData.product === 'premium'
+                              "
+                              variant="outline-light"
                               @click="addToQueue(item.uri)"
                             >
                               <fa-icon :icon="['fas', 'step-forward']" />
                               {{ $t('songlist.nextQueue') }}
                             </b-button>
                             <b-button
-                              :variant="`${
-                                getTheme == 'dark'
-                                  ? 'outline-light'
-                                  : 'outline-dark'
-                              }`"
+                              variant="outline-light"
                               :to="`/track/${item.id}`"
                             >
                               <fa-icon
@@ -284,7 +277,7 @@
         getSearch && getSearch.artists && getSearch.artists.items.length !== 0
       "
       class="card"
-      :bg-variant="getTheme === 'dark' ? 'dark' : 'light'"
+      bg-variant="dark"
     >
       <template #header>
         <b-row
@@ -309,7 +302,7 @@
             class="list p-0"
           >
             <b-link :to="localePath(`/artist/${item.id}`)">
-              <b-row class="m-0" align-h="start">
+              <b-row class="m-0 item" align-h="start">
                 <b-col cols="3" md="1" class="m-0">
                   <img
                     v-if="item.images && item.images[1]"
@@ -332,7 +325,7 @@
         getSearch && getSearch.albums && getSearch.albums.items.length !== 0
       "
       class="card"
-      :bg-variant="getTheme === 'dark' ? 'dark' : 'light'"
+      bg-variant="dark"
     >
       <template #header>
         <b-row v-b-toggle="`albums-collapse`" align-h="between" class="mx-3 h3">
@@ -353,7 +346,7 @@
             class="list p-0"
           >
             <b-link :to="localePath(`/album/${album.id}`)">
-              <b-row class="m-0" align-h="start">
+              <b-row class="m-0 item" align-h="start">
                 <b-col cols="3" md="1" class="m-0">
                   <img :src="album.images[1].url" width="100%" />
                 </b-col>
@@ -369,13 +362,9 @@
     </b-card>
     <br />
     <b-card
-      v-if="
-        getSearch &&
-        getSearch.playlists &&
-        getSearch.playlists.items.length !== 0
-      "
+      v-if="getSearch && getSearch.playlists"
       class="card"
-      :bg-variant="getTheme === 'dark' ? 'dark' : 'light'"
+      bg-variant="dark"
     >
       <template #header>
         <b-row
@@ -400,7 +389,7 @@
             class="list p-0"
           >
             <b-link :to="localePath(`/playlists/${item.id}`)">
-              <b-row class="m-0" align-h="start">
+              <b-row class="m-0 item" align-h="start">
                 <b-col cols="3" md="1" class="m-0">
                   <img
                     v-if="item.images && item.images[0]"
@@ -425,9 +414,9 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'SearchPage',
+  middleware: 'auth',
   data: () => ({
     search: null,
-    lastSearch: 0,
     types: ['artist', 'album', 'playlist', 'track'],
     options: {
       limit: 5,
@@ -436,7 +425,6 @@ export default {
     currentCollapse: null,
   }),
   computed: {
-    ...mapGetters(['getTheme']),
     ...mapGetters('userprofile', ['getUserData']),
     ...mapGetters('search', ['getSearch', 'getQuery']),
     ...mapGetters('player', ['getStatus']),
@@ -448,14 +436,11 @@ export default {
     ...mapActions('search', ['makeSearch']),
     ...mapActions('player', ['addToQueue', 'skipTrack', 'playTrack']),
     launchSearch() {
-      if (this.lastSearch - Date.now() < -500 && this.search !== '') {
-        this.lastSearch = Date.now()
-        this.makeSearch({
-          query: this.search,
-          types: this.types,
-          options: this.options,
-        })
-      }
+      this.makeSearch({
+        query: this.search,
+        types: this.types,
+        options: this.options,
+      })
     },
     closeOtherCollapses(newCollapse) {
       if (this.currentCollapse && !(this.currentCollapse === newCollapse)) {
@@ -503,10 +488,6 @@ export default {
 </script>
 
 <style>
-.card {
-  border-radius: 2em;
-}
-
 .collapsed .when-open,
 .not-collapsed .when-closed {
   display: none;
@@ -519,5 +500,13 @@ export default {
 
 .track {
   border: none;
+}
+
+.search {
+  width: 100%;
+}
+
+.item {
+  min-height: 55px;
 }
 </style>

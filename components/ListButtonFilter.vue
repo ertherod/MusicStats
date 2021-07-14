@@ -30,6 +30,8 @@
       :type="type"
     />
 
+    <AlbumList v-if="type === 'album_list'" :albums="filterItems" />
+
     <div class="row justify-content-center">
       <PageButtons
         :current-page="currentPage"
@@ -45,10 +47,11 @@ import FilterSelect from './filters/FilterSelect.vue'
 import PlaylistList from './lists/PlaylistList.vue'
 import PageButtons from './filters/PageButtons.vue'
 import SongList from './lists/SongList.vue'
+import AlbumList from './lists/AlbumList.vue'
 
 export default {
   name: 'ListButtonFilter',
-  components: { FilterSelect, PlaylistList, PageButtons, SongList },
+  components: { FilterSelect, PlaylistList, PageButtons, SongList, AlbumList },
   props: {
     type: {
       type: String,

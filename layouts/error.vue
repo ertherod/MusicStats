@@ -1,34 +1,51 @@
 <template>
   <div class="container-lg text-center pt-5 pb-5">
     <div v-if="error.statusCode === 404">
-      <h2>{{ $t('error.404') }}</h2>
+      <h3><fa-icon :icon="['far', 'dizzy']" /> {{ $t('error.404') }}</h3>
       <p>{{ $t('error.nopage') }}</p>
     </div>
-    <h1 v-else>An error occurred</h1>
-    <b-button-group>
+
+    <div v-else>
+      <h3><fa-icon :icon="['far', 'dizzy']" /> {{ $t('error.occured') }}</h3>
+    </div>
+    <div v-if="error.statusCode && error.message">
       <b-button
-        :to="localePath('/')"
-        :variant="getTheme == 'dark' ? 'outline-light' : 'outline-dark'"
+        v-b-toggle="'error_details'"
+        variant="outline-light"
+        class="my-2"
+      >
+        {{ $t('error.details') }}
+        <fa-icon :icon="['fas', 'chevron-up']" class="when-open" />
+        <fa-icon :icon="['fas', 'chevron-down']" class="when-closed" />
+      </b-button>
+
+      <b-collapse id="error_details" class="text-center">
+        <p class="error-details p-4 m-3">
+          Error {{ error.statusCode }} : {{ error.message }}
+        </p>
+      </b-collapse>
+    </div>
+    <b-button-group>
+      <b-button :to="localePath('/')" variant="outline-light"
         ><fa-icon :icon="['fas', 'home']" /> {{ $t('error.return_home') }}
       </b-button>
-      <b-button
-        :variant="getTheme == 'dark' ? 'outline-light' : 'outline-dark'"
-        @click="reloadPage"
-        >Reload page</b-button
-      >
+      <b-button variant="outline-light" @click="reloadPage">
+        {{ $t('error.reload') }}
+        <fa-icon :icon="['fas', 'sync']"
+      /></b-button>
     </b-button-group>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
 export default {
   layout: 'default',
   // eslint-disable-next-line vue/require-prop-types
-  props: ['error'],
-  computed: {
-    ...mapGetters(['getTheme']),
+  props: {
+    error: {
+      type: Object,
+      default: null,
+    },
   },
   methods: {
     reloadPage() {
@@ -37,3 +54,15 @@ export default {
   },
 }
 </script>
+
+<style>
+.error-details {
+  font-family: 'Courier New', Courier, monospace;
+  background-color: black;
+  color: white;
+}
+.collapsed > .when-open,
+.not-collapsed > .when-closed {
+  display: none;
+}
+</style>

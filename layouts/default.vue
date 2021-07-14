@@ -1,28 +1,31 @@
 <template>
   <div>
-    <Header />
-    <Nuxt />
-    <Footer />
+    <div v-if="isReady">
+      <Header />
+      <Nuxt />
+      <Footer />
+    </div>
+    <Loading v-else text="loading" />
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import Footer from '~/components/layout/Footer.vue'
 import Header from '~/components/layout/Header.vue'
+import Loading from '~/components/Loading.vue'
 
 export default {
   name: 'Layout',
-  components: { Header, Footer },
-  head() {
-    return {
-      bodyAttrs: {
-        class: `${this.getTheme === 'dark' ? 'body-dark' : 'body-light'}`,
-      },
-    }
-  },
+  components: { Header, Footer, Loading },
   computed: {
-    ...mapGetters(['getTheme']),
+    ...mapGetters(['isReady']),
+  },
+  async mounted() {
+    await this.tryConnect()
+  },
+  methods: {
+    ...mapActions(['tryConnect']),
   },
 }
 </script>

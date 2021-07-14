@@ -25,6 +25,8 @@ const actions = {
           root: true,
         })
         dispatch('requestUserProfile')
+      } else {
+        throw err
       }
     }
   },

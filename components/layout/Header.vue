@@ -1,9 +1,18 @@
 <template>
-  <b-navbar toggleable="lg" :type="getTheme" :variant="getTheme" sticky>
-    <b-navbar-brand :to="localePath('/')">
+  <b-navbar toggleable="lg" type="dark" variant="dark" sticky>
+    <b-navbar-brand :to="localePath('/')" class="my-auto">
       <img id="logo" src="/img/logo.png" />
+
+      <span class="h4 align-middle my-auto"
+        >MUSIC<span class="blue-title">STATS</span></span
+      >
     </b-navbar-brand>
-    <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
+    <b-navbar-toggle target="nav-collapse" class="my-auto"
+      ><fa-icon :icon="['fas', 'bars']" class="closed" />
+      <fa-icon :icon="['fas', 'times']" class="opened" />
+    </b-navbar-toggle>
+
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav class="ml-auto">
         <b-nav-item
@@ -21,14 +30,25 @@
           <fa-icon :icon="['fas', 'lock']" />
           {{ $t('header.login') }}
         </b-nav-item>
-        <b-nav-item
+        <b-nav-item-dropdown
           v-if="isConnected"
-          :to="localePath('/playlists')"
-          :active="$route.path == localePath('/playlists')"
+          class="dropdown-dark my-auto"
+          left
         >
-          <fa-icon :icon="['fas', 'list']" />
-          {{ $t('header.myplaylists') }}
-        </b-nav-item>
+          <template #button-content>
+            <fa-icon :icon="['fas', 'chart-bar']" /><span class="my-auto">
+              Tops</span
+            >
+          </template>
+          <b-dropdown-item :to="localePath('/tops/artists')"
+            ><fa-icon :icon="['fas', 'user']" />
+            {{ $t('header.top_artists') }}</b-dropdown-item
+          >
+          <b-dropdown-item :to="localePath('/tops/tracks')">
+            <fa-icon :icon="['fas', 'list']" />
+            {{ $t('header.top_tracks') }}
+          </b-dropdown-item>
+        </b-nav-item-dropdown>
         <b-nav-item
           v-if="isConnected"
           :to="localePath('/recently-played')"
@@ -45,6 +65,25 @@
           <fa-icon :icon="['fas', 'wrench']" />
           {{ $t('header.settings') }}
         </b-nav-item>
+        <b-nav-item-dropdown
+          v-if="isConnected"
+          class="dropdown-dark my-auto"
+          left
+        >
+          <template #button-content>
+            <fa-icon :icon="['fas', 'list']" /><span class="my-auto">
+              {{ $t('header.playlists') }}</span
+            >
+          </template>
+          <b-dropdown-item :to="localePath('/playlists')"
+            ><fa-icon :icon="['fas', 'list']" />
+            {{ $t('header.myplaylists') }}</b-dropdown-item
+          >
+          <b-dropdown-item :to="localePath('/recommendations')">
+            <fa-icon :icon="['fas', 'chart-line']" />
+            {{ $t('header.recommendations') }}
+          </b-dropdown-item>
+        </b-nav-item-dropdown>
         <b-nav-item
           v-if="isConnected"
           :to="localePath('/search')"
@@ -55,16 +94,11 @@
         </b-nav-item>
         <b-nav-item-dropdown
           v-if="getUserData && isConnected"
-          :class="getTheme == 'dark' ? 'dropdown-dark' : ''"
+          class="dropdown-dark my-auto"
           right
         >
           <template #button-content>
-            <img
-              v-if="getUserData.images && getUserData.images[0]"
-              :src="getUserData.images[0].url"
-              class="header-profile-pic"
-            />
-            {{ getUserData.display_name }}
+            <span class="my-auto">{{ getUserData.display_name }}</span>
           </template>
           <b-dropdown-item :to="localePath('/profile')"
             ><fa-icon :icon="['fas', 'user']" />
@@ -95,7 +129,7 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'Header',
   computed: {
-    ...mapGetters(['getTheme', 'isConnected', 'getToken', 'getState']),
+    ...mapGetters(['isConnected', 'getToken', 'getState']),
     ...mapGetters('userprofile', ['getUserData']),
   },
   mounted() {
@@ -111,13 +145,19 @@ export default {
 
 <style>
 #logo {
-  height: 6vh;
+  height: 3vh;
 }
 
-.header-profile-pic {
-  height: 3vh;
-  width: 3vh;
-  object-fit: cover;
-  border-radius: 2vh;
+.nav-item {
+  margin-bottom: auto;
+  margin-top: auto;
+}
+.blue-title {
+  color: #2e8fe4;
+}
+
+.collapsed > .opened,
+.not-collapsed > .closed {
+  display: none;
 }
 </style>

@@ -5,9 +5,13 @@ export default {
     profile_page: 'Profil',
     logout: 'Deconnexion',
     settings: 'Paramètres',
-    myplaylists: 'Mes Playlists',
-    recently_played: 'Ecoutés récemment ',
+    myplaylists: 'Mes playlists',
+    playlists: 'Playlists',
+    recently_played: 'Écoutes récentes',
     search: 'Rechercher',
+    top_artists: 'Vos artistes préférés',
+    top_tracks: 'Vos titres préférés',
+    recommendations: 'Recommendations',
   },
 
   pages: {
@@ -26,10 +30,7 @@ export default {
     },
     settings: {
       title: 'Paramètres',
-      choose_theme: 'Thème :',
       choose_lang: 'Langue :',
-      dark_theme: 'Thème sombre',
-      light_theme: 'Thème clair',
     },
     profile: {
       title: 'Profil Spotify',
@@ -49,7 +50,7 @@ export default {
       average_duration: "Durée moyenne d'un titre :",
       getting: 'Nous récupérons la page...',
       analysis_playlist: 'Cette playlist est',
-      analysis_song: 'Cette musique est',
+      analysis_song: 'Ce titre est ',
       average_valence: 'Gaité moyenne de la playlist :',
       average_energy: 'Energie moyenne de la playlist :',
       average_popularity: 'Popularité moyenne de la playlist :',
@@ -67,17 +68,21 @@ export default {
       released_on: 'Sorti le ',
     },
     recent: {
-      title: 'Ecoutés récemment',
+      title: 'Écoutes récentes',
       average_valence: 'Gaité moyenne :',
       average_energy: 'Energie moyenne :',
       average_popularity: 'Popularité moyenne :',
       danceability: 'Dansable : ',
       subtitle_analysis:
         "Statistiques des derniers titres écoutés aujourd'hui (max. 50)",
-      analysis: 'Les dernières musiques écoutées sont ',
+      analysis: 'Les derniers titres écoutés sont ',
       resultperpage: 'Nombre de titres par page :',
       listened_on: 'Ecoutée à ',
       refresh: 'Actualiser',
+      happy: 'joyeux',
+      sad: 'tristes',
+      chill: 'calmes',
+      agressive: 'agressifs',
     },
     album: {
       analysis: 'Cet album est',
@@ -95,10 +100,16 @@ export default {
     },
     artist: {
       followers: 'personnes suivent',
-      top_tracks: 'Top Titres',
+      top_tracks: 'Titres populaires',
       artist_happiness: 'Cet(te) artiste a une discographie plutôt ',
       albums: 'Albums',
       singles: 'Singles et EPs',
+      follow: "S'abonner",
+      following: 'Abonné',
+      view_singles: 'Voir tous les singles de ',
+      view_albums: 'Voir tous les albums de ',
+      warning:
+        "Certains albums peuvent apparaître en double à cause de version explicite/censurée et d'ajout de titres après la première sortie",
     },
     search: {
       title: 'Rechercher',
@@ -112,6 +123,47 @@ export default {
       playlists: 'Playlists',
       open_page: 'Ouvrir la page dédiée',
     },
+    top_artists: {
+      title: 'Vos artistes préférés',
+      short: 'Les 4 dernières semaines',
+      medium: 'Les 6 derniers mois',
+      long: 'Tout les temps',
+      period: 'Période',
+    },
+    top_tracks: {
+      title: 'Vos titres préférés',
+      listen: 'Écouter tout',
+      create_playlist: 'Créer une playlist avec ces titres',
+    },
+    recommendations: {
+      title: 'Recommendations',
+      add: 'Ajouter',
+      added: 'Ajouté',
+      tooMuch: "Trop d'éléments !",
+      del: 'Supprimer',
+      track: 'Titre',
+      artist: 'Artiste',
+      tooMuchGenre:
+        'Vous devez enlever un élément ci-dessus pour pouvoir ajouter un filtre de genre!',
+      genres: 'Genres',
+      items: 'Éléments sélectionnés',
+      selectGenre: 'Selectionnez un genre (optionel) :',
+      howto:
+        "L'outil de recommendations vous permet de créer des playlists rapidement en se basant sur les artistes et titres que vous choisissez",
+      step1:
+        "Étape 1: Ajoutez jusqu'à 5 artistes et titres qui vont servir de base de recommendations",
+      step2:
+        'Étape 2: Choississez un genre pour votre playlist (ex. HipHop pour du Rap). Cette étape est optionelle',
+    },
+  },
+
+  playlistCreation: {
+    top_short:
+      "Top 50 de vos titres préférés sur une période d'un mois. Créé avec MusicStats.net",
+    top_medium:
+      'Top 50 de vos titres préférés sur une période de 6 mois. Créé avec MusicStats.net',
+    top_long:
+      'Top 50 de vos titres préférés de tout les temps. Créé avec MusicStats.net',
   },
 
   songlist: {
@@ -126,6 +178,10 @@ export default {
     404: 'Erreur : 404 Page non trouvée',
     nopage: 'Cette page ne semble pas encore exister',
     return_home: "Retour à l'accueil",
+    no_img: "Pas d'image disponible",
+    occured: 'Oups ! Une erreur est survenue',
+    details: 'Plus de détails',
+    reload: 'Actualiser la page',
   },
 
   footer: {
@@ -171,4 +227,14 @@ export default {
       12: 'décembre',
     },
   },
+
+  library: {
+    save: 'Enregistrer dans la bibliothèque',
+    saved: 'Enregistré dans la bibliothèque',
+  },
+
+  yes: 'Oui',
+  no: 'Non',
+  none: 'Aucun',
+  loading: 'Chargement...',
 }

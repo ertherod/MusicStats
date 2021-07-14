@@ -27,7 +27,7 @@
         ></b-progress-bar>
       </b-progress>
     </div>
-    <div v-if="analysis.popularity">
+    <div v-if="analysis.popularity == 0 || analysis.popularity">
       <h6>{{ $t('analysis.popularity') }}</h6>
       <b-progress :max="100" variant="success" class="my-2">
         <b-progress-bar

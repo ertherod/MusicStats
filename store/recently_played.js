@@ -48,6 +48,8 @@ export const actions = {
         })
         dispatch('requestRecentlyPlayed')
         dispatch('requestAverageFeatures')
+      } else {
+        throw err
       }
     }
   },

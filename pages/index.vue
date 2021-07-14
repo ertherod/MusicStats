@@ -1,7 +1,7 @@
 <template>
-  <div class="container-md" style="word-break: break-all">
+  <b-container fluid="lg" style="word-break: break-all">
     <h6>{{ getToken }}</h6>
-  </div>
+  </b-container>
 </template>
 
 <script>
@@ -16,15 +16,6 @@ export default {
 </script>
 
 <style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
 .title {
   font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
     'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;

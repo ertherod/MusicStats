@@ -27,7 +27,7 @@ export const actions = {
       grant_type: 'authorization_code',
       client_id: process.env.CLIENT_ID,
       code: reqCode,
-      redirect_uri: `http://${process.env.REDIRECT_URI}/auth`,
+      redirect_uri: `http://${process.env.REDIRECT_URI}/${this.$i18n.locale}/auth`,
       code_verifier: state.pkce.code_verifier,
     }
     const config = {
@@ -78,7 +78,7 @@ export const mutations = {
   pkceUpdate(state, { pkce, secret }) {
     state.pkce = pkce
     state.secret = secret
-    state.url = `https://accounts.spotify.com/authorize?response_type=code&code_challenge_method=S256&redirect_uri=http://${process.env.REDIRECT_URI}/auth&client_id=${process.env.CLIENT_ID}&scope=user-read-private user-read-recently-played user-read-currently-playing user-top-read user-read-playback-position playlist-modify-private user-read-playback-state user-modify-playback-state playlist-read-private playlist-read-collaborative&code_challenge=${pkce.code_challenge}&state=${secret}`
+    state.url = `https://accounts.spotify.com/authorize?response_type=code&code_challenge_method=S256&redirect_uri=http://${process.env.REDIRECT_URI}/${this.$i18n.locale}/auth&client_id=${process.env.CLIENT_ID}&scope=user-read-private user-library-read user-library-modify user-read-recently-played user-read-currently-playing user-top-read user-read-playback-position playlist-modify-private user-read-playback-state user-modify-playback-state playlist-read-private user-follow-modify user-follow-read playlist-read-collaborative&code_challenge=${pkce.code_challenge}&state=${secret}`
   },
   clearPKCE(state) {
     state.pkce = undefined

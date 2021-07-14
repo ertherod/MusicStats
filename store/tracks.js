@@ -30,6 +30,8 @@ export const actions = {
           root: true,
         })
         dispatch('requestTrack', id)
+      } else {
+        throw err
       }
     }
   },

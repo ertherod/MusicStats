@@ -1,7 +1,7 @@
 <template>
   <b-container v-if="getRecentlyPlayed" fluid="lg" class="pt-3 pb-5 mb-5">
     <div v-if="ready">
-      <b-card :bg-variant="getTheme == 'dark' ? 'dark' : 'light'" class="track">
+      <b-card bg-variant="dark" class="track">
         <template #header>
           <b-row align-h="center" class="mx-2">
             <span class="h3"
@@ -12,16 +12,12 @@
         </template>
         <b-row>
           <b-col cols="12" class="text-center">
-            <EmojiPage :size="12" :stats="averageAnalysis" />
+            <EmojiPage :size="5" :stats="averageAnalysis" />
             <h5>
               <b
                 ><u>
                   {{ $t('pages.recent.analysis') }}
-                  {{
-                    `${$t(`analysis.${averageAnalysis}`)}${
-                      $i18n.locale === 'fr' ? 's' : ''
-                    }`
-                  }}</u
+                  {{ $t(`pages.recent.${averageAnalysis}`) }}</u
                 ></b
               >
             </h5>
@@ -35,11 +31,7 @@
         </b-row>
         <template #footer>
           <b-row align-h="center" class="mx-1">
-            <b-button
-              :variant="`${
-                getTheme == 'dark' ? 'outline-light' : 'outline-dark'
-              }`"
-              @click="requestRecentlyPlayed()"
+            <b-button variant="outline-light" @click="requestRecentlyPlayed()"
               ><fa-icon :icon="['fas', 'sync']" />
               {{ $t('pages.recent.refresh') }}</b-button
             >
@@ -71,6 +63,7 @@ import { getAnalysis } from '~/utils'
 export default {
   name: 'RecentlyPlayed',
   components: { ListButtonFilter, EmojiPage, ProgressAnalysis },
+  middleware: 'auth',
   data() {
     return {
       ready: false,
@@ -81,7 +74,6 @@ export default {
       'getRecentlyPlayed',
       'getAverageFeatures',
     ]),
-    ...mapGetters(['getTheme']),
     averageAnalysis() {
       return this.requestAnalysis(
         this.getAverageFeatures.valence,
@@ -89,6 +81,7 @@ export default {
       )
     },
   },
+
   async mounted() {
     await this.requestRecentlyPlayed()
     this.ready = true

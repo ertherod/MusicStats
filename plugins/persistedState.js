@@ -1,25 +1,11 @@
 import createPersistedState from 'vuex-persistedstate'
 import * as Cookies from 'js-cookie'
-import cookie from 'cookie'
 
 export default ({ store, req }) => {
   createPersistedState({
     paths: ['auth.pkce', 'auth.secret', 'token', 'country'],
     storage: {
-      getItem: (key) => {
-        // See https://nuxtjs.org/guide/plugins/#using-process-flags
-        if (process.server) {
-          if (req) {
-            const parsedCookies = cookie.parse(String(req.headers.cookie))
-            return parsedCookies[key]
-          } else {
-            return null
-          }
-        } else {
-          return Cookies.get(key)
-        }
-      },
-      // Please see https://github.com/js-cookie/js-cookie#json, on how to handle JSON.
+      getItem: (key) => Cookies.get(key),
       setItem: (key, value) =>
         Cookies.set(key, value, { expires: 365, secure: false }),
       removeItem: (key) => Cookies.remove(key),

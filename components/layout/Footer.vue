@@ -1,7 +1,5 @@
 <template>
-  <footer
-    :class="`text-lg-start ${getTheme === 'dark' ? 'bg-dark' : 'bg-light'}`"
-  >
+  <footer class="text-lg-start bg-dark">
     <div class="p-2 container-md">
       <div class="row">
         <section
@@ -17,10 +15,10 @@
             <span>{{ $t('footer.stay_connected') }}</span>
           </div>
           <div>
-            <a href="" class="me-4 text-reset twitter">
+            <a href="" target="_blank" class="me-4 text-reset twitter">
               <fa-icon :icon="['fab', 'twitter']" class="icon" />
             </a>
-            <a href="" class="me-4 text-reset instagram">
+            <a href="" target="_blank" class="me-4 text-reset instagram">
               <fa-icon :icon="['fab', 'instagram']" />
             </a>
           </div>
@@ -39,22 +37,24 @@
             {{ $t('footer.sections') }}
           </h6>
           <p>
-            <a href="#" class="text-reset">{{
+            <b-link :to="localePath('/recently-played')">{{
               $t('footer.last_played_songs')
-            }}</a>
+            }}</b-link>
           </p>
           <p>
-            <b-link :to="localePath('/playlists/')" class="text-reset">{{
+            <b-link :to="localePath('/playlists/')">{{
               $t('footer.my_playlists')
             }}</b-link>
           </p>
           <p>
-            <a href="#" class="text-reset">{{ $t('footer.top_artists') }}</a>
+            <b-link :to="localePath('/tops/artists')">{{
+              $t('footer.top_artists')
+            }}</b-link>
           </p>
           <p>
-            <a href="#" class="text-reset">{{
+            <b-link :to="localePath('/tops/tracks')">{{
               $t('footer.top_songs_global')
-            }}</a>
+            }}</b-link>
           </p>
         </div>
         <div class="col-md-4 mx-auto mb-4">
@@ -80,21 +80,16 @@
     </div>
     <div class="text-center p-4">
       © 2021 Copyright:
-      <a class="text-reset fw-bold" href="https://musicstats.com/"
-        >MusicStats.com</a
+      <b-link class="text-reset fw-bold" :to="localePath('/')"
+        >MusicStats.net</b-link
       >
     </div>
   </footer>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
 export default {
   name: 'Footer',
-  computed: {
-    ...mapGetters(['getTheme']),
-  },
 }
 </script>
 

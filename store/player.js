@@ -46,6 +46,8 @@ export const actions = {
           root: true,
         })
         dispatch('skipTrack')
+      } else {
+        throw err
       }
     }
   },
@@ -69,6 +71,8 @@ export const actions = {
           root: true,
         })
         dispatch('skipTrack')
+      } else {
+        throw err
       }
     }
   },
@@ -88,6 +92,8 @@ export const actions = {
           root: true,
         })
         dispatch('skipTrack')
+      } else {
+        throw err
       }
     }
   },
@@ -96,7 +102,11 @@ export const actions = {
     const SpotifyApi = new SpotifyWebApi()
     try {
       SpotifyApi.setAccessToken(rootState.token.access)
-      await SpotifyApi.play({ uris: [uri] })
+      if (typeof uri === 'string') {
+        await SpotifyApi.play({ uris: [uri] })
+      } else {
+        await SpotifyApi.play({ uris: uri })
+      }
     } catch (err) {
       if (
         err.statusCode === 401 &&
@@ -126,11 +136,13 @@ export const actions = {
           root: true,
         })
         dispatch('playContext', uri, shuffle)
+      } else {
+        throw err
       }
     }
   },
 
-  async setShuffle({ rootState, commit, dispatch }, shuffle = false) {
+  async setShuffle({ rootState, dispatch }, shuffle = false) {
     const SpotifyApi = new SpotifyWebApi()
     try {
       SpotifyApi.setAccessToken(rootState.token.access)
@@ -144,6 +156,8 @@ export const actions = {
           root: true,
         })
         dispatch('setShuffle', shuffle)
+      } else {
+        throw err
       }
     }
   },

@@ -10,14 +10,16 @@
     </ul>
     <h5>{{ $t('pages.login.subtitle2') }}</h5>
     <br />
-    <a
-      :href="getUrl"
-      :class="`btn ${
-        getTheme == 'dark' ? 'btn-outline-light' : 'btn-outline-dark'
-      } btn-floating p-2 m-1 mx-auto login_button`"
-      ><fa-icon :icon="['fab', 'spotify']" />
-      {{ $t('pages.login.spotify_login') }}</a
-    >
+    <b-row align-h="center">
+      <b-col md="4" sm="8">
+        <a
+          :href="getUrl"
+          class="btn btn-outline-light btn-floating p-2 m-1 login_button"
+          ><fa-icon :icon="['fab', 'spotify']" />
+          {{ $t('pages.login.spotify_login') }}</a
+        >
+      </b-col>
+    </b-row>
     <br />
     <p class="font-italic">{{ $t('pages.login.leaving_site') }}</p>
   </div>
@@ -29,7 +31,7 @@ export default {
   name: 'Login',
   computed: {
     ...mapGetters('auth', ['getUrl', 'getPKCE']),
-    ...mapGetters(['getTheme', 'isConnected']),
+    ...mapGetters(['isConnected']),
   },
   mounted() {
     if (this.isConnected) {
@@ -57,10 +59,10 @@ h2 {
 
 .login_button {
   display: block;
-  width: 50%;
+  min-width: 50%;
 }
 
 .login_button:hover {
-  color: #1db954;
+  color: #1db954 !important;
 }
 </style>

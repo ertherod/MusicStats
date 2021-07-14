@@ -35,7 +35,9 @@ export const actions = {
         await dispatch('auth/refreshToken', rootState.token.refresh, {
           root: true,
         })
-        dispatch('getArtistDiscography', { query, types, options })
+        dispatch('makeSearch', { query, types, options })
+      } else {
+        throw err
       }
     }
   },

@@ -1,37 +1,37 @@
 <template>
   <b-btn-group v-if="pageList" class="text-center">
     <b-button
+      v-if="pageNumber >= 4"
       :disabled="pageNumber <= 1 || currentPage === 1"
       class="mx-1"
       href="#top"
-      :variant="getTheme == 'dark' ? 'outline-light' : 'outline-dark'"
-      @click="$emit('change', currentPage - 1)"
-      >{{ '&lt;' }}</b-button
-    >
+      variant="outline-light"
+      @click="$emit('change', 1)"
+      ><fa-icon :icon="['fas', 'angle-double-left']"
+    /></b-button>
     <b-button
       v-for="page in pageList"
       :key="page"
       href="#top"
       class="mx-1"
-      :variant="`${getTheme == 'dark' ? 'outline-light' : 'outline-dark'}
+      :variant="`outline-light
         ${currentPage == page ? 'active' : ''}`"
       @click="$emit('change', page)"
       >{{ page }}</b-button
     >
     <b-button
+      v-if="pageNumber >= 4"
       :disabled="pageNumber <= 1 || currentPage === pageNumber"
       class="mx-1"
       href="#top"
-      :variant="getTheme == 'dark' ? 'outline-light' : 'outline-dark'"
-      @click="$emit('change', currentPage + 1)"
-      >{{ '&gt;' }}</b-button
-    >
+      variant="outline-light"
+      @click="$emit('change', pageNumber)"
+      ><fa-icon :icon="['fas', 'angle-double-right']"
+    /></b-button>
   </b-btn-group>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
 export default {
   name: 'PageButtons',
   props: {
@@ -42,9 +42,6 @@ export default {
     return {
       pageList: null,
     }
-  },
-  computed: {
-    ...mapGetters(['getTheme']),
   },
   watch: {
     pageNumber() {

@@ -1,27 +1,18 @@
 <template>
-  <div>
+  <div class="text-center my-5" style="min-height: 60vh">
     <b-spinner
       class="spinner"
-      :variant="getTheme == 'dark' ? 'light' : 'primary'"
+      variant="light"
+      style="height: 8vh; width: 8vh"
     />
-    <h2>{{ $t('pages.myplaylists.getting') }}</h2>
+    <h2 v-if="!text">{{ $t('pages.myplaylists.getting') }}</h2>
+    <h2 v-else>{{ $t(text) }}</h2>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
 export default {
   name: 'Loading',
-  computed: {
-    ...mapGetters(['getTheme']),
-  },
+  props: { text: { type: String, default: null } },
 }
 </script>
-
-<style>
-.spinner {
-  height: 8vh;
-  width: 8vh;
-}
-</style>

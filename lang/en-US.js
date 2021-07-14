@@ -6,8 +6,12 @@ export default {
     logout: 'Log Out',
     settings: 'Settings',
     myplaylists: 'My Playlists',
+    playlists: 'Playlists',
     recently_played: 'Recently Played',
     search: 'Search',
+    top_artists: 'Top Artists',
+    top_tracks: 'Top Tracks',
+    recommendations: 'Recommendations',
   },
 
   pages: {
@@ -25,10 +29,7 @@ export default {
     },
     settings: {
       title: 'Settings',
-      choose_theme: 'Theme :',
       choose_lang: 'Language :',
-      dark_theme: 'Dark Theme',
-      light_theme: 'Light Theme',
     },
     profile: {
       title: 'Spotify Profile',
@@ -60,6 +61,10 @@ export default {
       preview: 'Song preview :',
       no_preview: 'No song preview available',
       released_on: 'Released on ',
+      valence: 'Happiness (valence) :',
+      energy: 'Energy :',
+      popularity: 'Popularity :',
+      danceability: 'Danceability :',
     },
     recent: {
       title: 'Recently listened',
@@ -72,6 +77,10 @@ export default {
       resultperpage: 'Number of tracks per page',
       listened_on: 'Listened at ',
       refresh: 'Refresh',
+      happy: 'happy',
+      sad: 'sad',
+      chill: 'calm',
+      agressive: 'agressive',
     },
     album: {
       analysis_album: 'This album is ',
@@ -81,7 +90,7 @@ export default {
       album: 'Album',
       ep: 'EP',
       single: 'Single',
-      by: 'par',
+      by: 'by',
       analysis: 'This album is',
       happy: 'happy',
       sad: 'sad',
@@ -90,10 +99,16 @@ export default {
     },
     artist: {
       followers: 'followers',
-      top_tracks: 'Top Tracks',
+      top_tracks: 'Popular Tracks',
       artist_happiness: "This artist's discography is mostly ",
       albums: 'Albums',
       singles: 'Singles and EPs',
+      follow: 'Follow',
+      following: 'Following',
+      view_singles: 'Show all singles from ',
+      view_albums: 'Show all albums from ',
+      warning:
+        'Some albums can appear twice because of explicit/non-explicit version and song additions after the first release',
     },
     search: {
       title: 'Search',
@@ -107,6 +122,47 @@ export default {
       playlists: 'Playlists',
       open_page: 'Open dedicated page',
     },
+    top_artists: {
+      title: 'Your Top Artists',
+      short: 'Last 4 weeks',
+      medium: 'Last 6 months',
+      long: 'All time',
+      period: 'Period',
+    },
+    top_tracks: {
+      title: 'Your Top Tracks',
+      listen: 'Listen all',
+      create_playlist: 'Create playlist with these tracks',
+    },
+    recommendations: {
+      title: 'Recommendations',
+      add: 'Add',
+      del: 'Remove',
+      track: 'Track',
+      artist: 'Artist',
+      added: 'Added',
+      tooMuch: 'Too much items !',
+      tooMuchGenre:
+        'Please remove an item above to be able to add a genre filter!',
+      genres: 'Genres',
+      items: 'Selected items',
+      selectGenre: 'Select a genre (optional):',
+      howto:
+        'The recommendation tool help you to make playlists quickly based on artists and tracks you choose',
+      step1:
+        'Step 1: Add up to 5 artists and tracks that will be used to create the recommendations',
+      step2:
+        'Step 2: Choose a genre that match the style you want to get (eg. HipHop for Rap music). This step is not mandatory',
+    },
+  },
+
+  playlistCreation: {
+    top_short:
+      'Top 50 of your favorite tracks on a period of a month. Created with MusicStats.net',
+    top_medium:
+      'Top 50 of your favorite tracks on a period of a 6 months. Created with MusicStats.net',
+    top_long:
+      'Top 50 of your favorite tracks of all the time. Created with MusicStats.net',
   },
 
   songlist: {
@@ -120,6 +176,10 @@ export default {
     404: 'Error : 404 Page not found',
     nopage: 'This page does not seem to exist yet',
     return_home: 'Back to Home',
+    no_img: 'Image not available',
+    occured: 'Oops ! An error occured',
+    details: 'More info',
+    reload: 'Refresh page',
   },
 
   footer: {
@@ -165,4 +225,14 @@ export default {
       12: 'december',
     },
   },
+
+  library: {
+    save: 'Save to library',
+    saved: 'Saved in library',
+  },
+
+  yes: 'Yes',
+  no: 'No',
+  none: 'Aucun',
+  loading: 'Loading app...',
 }
