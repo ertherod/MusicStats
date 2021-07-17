@@ -108,7 +108,7 @@
                 <b-collapse :id="`collapse-${item.track.id}`" class="mt-3">
                   <b-card bg-variant="dark" class="track my-2">
                     <b-row align-h="center">
-                      <b-col cols="12" md="8">
+                      <b-col cols="12" md="11">
                         <h6>
                           {{ $t('pages.myplaylists.by') }}
                           <span

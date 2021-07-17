@@ -18,7 +18,7 @@
             />
           </b-col>
           <b-col cols="9">
-            <p>
+            <p class="mx-3">
               {{ $t('pages.myplaylists.by') }}
               <span
                 v-for="(artist, index) in album.artists"

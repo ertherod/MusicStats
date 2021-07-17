@@ -1,7 +1,12 @@
 <template>
   <div class="dark-theme">
     <b-row class="my-3">
-      <b-col v-for="item in tracks" :key="item.track.id" md="6" class="my-1">
+      <b-col
+        v-for="(item, index) in tracks"
+        :key="item.track.id"
+        md="6"
+        class="my-1"
+      >
         <b-card bg-variant="dark" class="track my-2">
           <template #header
             ><span v-if="item.track.explicit" class="explicit">E</span>
@@ -17,15 +22,15 @@
             <b-col cols="8" class="artists my-auto">
               {{ $t('pages.myplaylists.by') }}
               <span
-                v-for="(artist, index) in item.track.artists"
+                v-for="(artist, artist_index) in item.track.artists"
                 :key="artist.id"
               >
                 <b-link
-                  v-if="index == item.track.artists.length - 1"
+                  v-if="artist_index == item.track.artists.length - 1"
                   :to="localePath(`/artist/${artist.id}`)"
                   ><b>{{ artist.name }}</b></b-link
                 >
-                <span v-else-if="index == item.track.artists.length - 2">
+                <span v-else-if="artist_index == item.track.artists.length - 2">
                   <b-link :to="localePath(`/artist/${artist.id}`)"
                     ><b>{{ artist.name }}</b></b-link
                   >
@@ -64,9 +69,9 @@
             <b-row align-h="center" class="mx-1">
               <b-button-group class="mt-2">
                 <b-button
-                  v-b-toggle="`collapse-${item.track.id}`"
+                  v-b-toggle="`collapse-${item.track.id}-${index}`"
                   variant="outline-light"
-                  @click="closeOtherCollapses(item.track.id)"
+                  @click="closeOtherCollapses(`${item.track.id}-${index}`)"
                 >
                   {{ $t('pages.myplaylists.more') }}
                   <fa-icon
@@ -102,9 +107,12 @@
             </b-row>
             <b-row>
               <b-col cols="12">
-                <b-collapse :id="`collapse-${item.track.id}`" class="mt-3">
+                <b-collapse
+                  :id="`collapse-${item.track.id}-${index}`"
+                  class="mt-3"
+                >
                   <b-row align-h="center">
-                    <b-col cols="12" md="8">
+                    <b-col cols="12" md="12">
                       <h6 v-if="type !== 'album'">
                         <span
                           v-if="
